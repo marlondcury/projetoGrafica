@@ -1,0 +1,14 @@
+/* CSS customizado para o projeto */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+}
+
+.card-header, .card-footer {
+    background-color: rgba(0,0,0,.03);
+}
