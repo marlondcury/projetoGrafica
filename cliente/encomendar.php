@@ -1,17 +1,31 @@
-<?php require_once '../includes/cabecalho.php'; ?>
-<?php
-    // Lógica para verificar se o usuário está logado. Se não, redirecionar para login.php
-    if (!isset($_SESSION['usuario_id'])) {
-        // Guarda a página atual para redirecionar de volta após o login
-        $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
-        header("Location: /grafica_web/login.php");
-        exit();
-    }
+<?php 
+require_once '../includes/cabecalho.php'; 
+// Inclui o DAO para buscar o serviço específico
+require_once '../dao/ServicoDao.php';
 
-    // Em um cenário real, buscaria o serviço pelo ID usando o DAO
-    // $servicoDao = new ServicoDao(); $servico = $servicoDao->buscarPorId($_GET['id']);
-    $servico_id = $_GET['id'] ?? 1;
-    $servico = ['id' => $servico_id, 'nome' => 'Impressão A4', 'preco_base' => 0.50, 'tipo_servico' => 'reproducao'];
+// Lógica de segurança para usuário logado
+if (!isset($_SESSION['usuario_id'])) {
+    $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
+    header("Location: /grafica_web/login.php");
+    exit();
+}
+
+// Pega o ID da URL de forma segura
+$servico_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$servico = null; // Inicia a variável como nula
+
+if ($servico_id) {
+    // Busca o serviço específico no banco de dados
+    $servicoDao = new ServicoDao();
+    $servico = $servicoDao->buscarPorId($servico_id);
+}
+
+// Se o serviço não for encontrado, exibe uma mensagem de erro
+if (!$servico) {
+    echo "<div class='alert alert-danger'>Serviço não encontrado ou inválido.</div>";
+    require_once '../includes/rodape.php';
+    exit(); // Interrompe a execução
+}
 ?>
 
 <h1 class="mb-4">Personalizar Serviço: <?= htmlspecialchars($servico['nome']) ?></h1>
@@ -37,10 +51,10 @@
         </div>
     <?php elseif ($servico['tipo_servico'] == 'banner'): ?>
          <div class="mb-3">
-            <label for="tamanho" class="form-label">Tamanho</label>
-            <select name="atributos[tamanho]" id="tamanho" class="form-select">
-                <option value="80x120">80cm x 120cm</option>
-                <option value="100x150">100cm x 150cm</option>
+            <label for="material" class="form-label">Material</label>
+            <select name="atributos[material]" id="material" class="form-select">
+                <option value="lona_fosca">Lona Fosca</option>
+                <option value="lona_brilho">Lona com Brilho</option>
             </select>
         </div>
     <?php endif; ?>
@@ -56,5 +70,19 @@
 
     <button type="submit" class="btn btn-primary">Adicionar ao Carrinho</button>
 </form>
+
+<script>
+    const inputQuantidade = document.getElementById('quantidade');
+    const spanValorTotal = document.getElementById('valor_total');
+    const precoBase = <?= $servico['preco_base']; ?>;
+
+    function atualizarTotal() {
+        const quantidade = parseInt(inputQuantidade.value) || 0;
+        const novoTotal = precoBase * quantidade;
+        const valorFormatado = novoTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        spanValorTotal.innerText = valorFormatado;
+    }
+    inputQuantidade.addEventListener('input', atualizarTotal);
+</script>
 
 <?php require_once '../includes/rodape.php'; ?>

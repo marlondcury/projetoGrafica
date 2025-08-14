@@ -1,28 +1,32 @@
-<?php require_once '../includes/cabecalho.php'; ?>
-<?php
-    // Em um cenário real, os dados viriam do ServicoDao
-    $servicos = [
-        ['id' => 1, 'nome' => 'Impressão A4', 'descricao' => 'Impressões de alta qualidade em papel A4.', 'preco_base' => 0.50, 'imagem_url' => 'https://via.placeholder.com/300'],
-        ['id' => 2, 'nome' => 'Banner em Lona', 'descricao' => 'Banners resistentes para eventos e divulgação.', 'preco_base' => 80.00, 'imagem_url' => 'https://via.placeholder.com/300'],
-        ['id' => 3, 'nome' => 'Caneca Personalizada', 'descricao' => 'Canecas de cerâmica com sua arte ou foto.', 'preco_base' => 35.00, 'imagem_url' => 'https://via.placeholder.com/300']
-    ];
+<?php 
+require_once '../includes/cabecalho.php'; 
+// Inclui o DAO para buscar os serviços no banco
+require_once '../dao/ServicoDao.php';
+
+// Cria a instância do DAO e busca todos os serviços
+$servicoDao = new ServicoDao();
+$servicos = $servicoDao->listarTodos();
 ?>
 
 <h1 class="mb-4">Nossos Serviços</h1>
 <div class="row">
-    <?php foreach ($servicos as $servico): ?>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <img src="<?= $servico['imagem_url'] ?>" class="card-img-top" alt="<?= $servico['nome'] ?>">
-                <div class="card-body">
-                    <h5 class="card-title"><?= $servico['nome'] ?></h5>
-                    <p class="card-text"><?= $servico['descricao'] ?></p>
-                    <p class="card-text fw-bold">A partir de R$ <?= number_format($servico['preco_base'], 2, ',', '.') ?></p>
-                    <a href="/grafica_web/cliente/encomendar.php?id=<?= $servico['id'] ?>" class="btn btn-primary">Encomendar Agora</a>
+    <?php if ($servicos): ?>
+        <?php foreach ($servicos as $servico): ?>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="<?= htmlspecialchars($servico['imagem_url']) ?>" class="card-img-top" alt="<?= htmlspecialchars($servico['nome']) ?>">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title"><?= htmlspecialchars($servico['nome']) ?></h5>
+                        <p class="card-text"><?= htmlspecialchars($servico['descricao']) ?></p>
+                        <p class="card-text fw-bold mt-auto">A partir de R$ <?= number_format($servico['preco_base'], 2, ',', '.') ?></p>
+                        <a href="/grafica_web/cliente/encomendar.php?id=<?= $servico['id'] ?>" class="btn btn-primary mt-2">Personalizar e Comprar</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p class="text-center">Nenhum serviço disponível no momento.</p>
+    <?php endif; ?>
 </div>
 
 <?php require_once '../includes/rodape.php'; ?>
