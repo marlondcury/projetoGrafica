@@ -1,14 +1,16 @@
 <?php
-require_once 'Cliente.php';
+// Não precisamos mais do Cliente.php aqui, pois vamos usar apenas o ID
+// require_once 'Cliente.php'; 
 require_once 'ItemEncomenda.php';
 
 class Encomenda {
     private $id;
-    private $cliente; // Objeto da classe Cliente
-    private $itens_encomenda = []; // Array de objetos ItemEncomenda
+    // MUDANÇA: Alterado de $cliente para $cliente_id para armazenar apenas o ID.
+    private $cliente_id; 
+    private $itens_encomenda = [];
     private $data_encomenda;
     private $valor_total;
-    private $status; // Ex: 'em_aberto', 'pago', 'concluido'
+    private $status;
     private $data_vencimento_boleto;
     
     // --- Getters e Setters ---
@@ -20,17 +22,17 @@ class Encomenda {
         $this->id = $id;
     }
     
-    public function getCliente() {
-        return $this->cliente;
+    // MUDANÇA: Métodos alterados para get/set do ID do cliente.
+    public function getClienteId() {
+        return $this->cliente_id;
     }
-    public function setCliente(Cliente $cliente) {
-        $this->cliente = $cliente;
+    public function setClienteId($cliente_id) {
+        $this->cliente_id = $cliente_id;
     }
 
     public function getItensEncomenda() {
         return $this->itens_encomenda;
     }
-    // Método para adicionar um item à encomenda
     public function adicionarItem(ItemEncomenda $item) {
         $this->itens_encomenda[] = $item;
     }
@@ -63,7 +65,6 @@ class Encomenda {
         $this->data_vencimento_boleto = $data_vencimento_boleto;
     }
     
-    // Método para calcular o valor total da encomenda com base nos itens
     public function calcularValorTotal() {
         $total = 0;
         foreach ($this->itens_encomenda as $item) {

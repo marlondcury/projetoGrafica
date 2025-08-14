@@ -4,51 +4,61 @@ require_once __DIR__.'/../classes/Usuario.php';
 
 class UsuarioDao {
 
-    public function criar(Usuario $usuario) {
-        $sql = 'INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)';
-        
+    public function criarCliente(Usuario $usuario) {
+        $pdo = Conexao::getInstance();
         try {
+            $pdo->beginTransaction();
+
+            // 1. Insere na tabela 'usuarios'
+            $sqlUsuario = 'INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)';
             $senhaHash = password_hash($usuario->getSenha(), PASSWORD_BCRYPT);
             
-            $stmt = Conexao::getInstance()->prepare($sql);
-            $stmt->bindValue(1, $usuario->getNome());
-            $stmt->bindValue(2, $usuario->getEmail());
-            $stmt->bindValue(3, $senhaHash);
-            $stmt->bindValue(4, $usuario->getTipo());
+            $stmtUsuario = $pdo->prepare($sqlUsuario);
+            $stmtUsuario->bindValue(1, $usuario->getNome());
+            $stmtUsuario->bindValue(2, $usuario->getEmail());
+            $stmtUsuario->bindValue(3, $senhaHash);
+            $stmtUsuario->bindValue(4, 'cliente');
+            $stmtUsuario->execute();
             
-            return $stmt->execute();
+            $usuarioId = $pdo->lastInsertId();
+
+            // 2. Insere na tabela 'clientes' USANDO O MESMO ID
+            // AQUI ESTÁ A CORREÇÃO PRINCIPAL
+            $sqlCliente = 'INSERT INTO clientes (id, usuario_id) VALUES (?, ?)';
+            $stmtCliente = $pdo->prepare($sqlCliente);
+            $stmtCliente->bindValue(1, $usuarioId);
+            $stmtCliente->bindValue(2, $usuarioId);
+            $stmtCliente->execute();
+            
+            $pdo->commit();
+            return true;
+
         } catch (PDOException $e) {
-            // Em um sistema de produção, seria ideal logar o erro em vez de exibi-lo
-            die("Erro ao criar usuário: " . $e->getMessage());
+            $pdo->rollBack();
+            die("Erro ao criar cliente: " . $e->getMessage());
+            return false;
         }
     }
-
+    // ... o método buscarPorEmail() continua igual ...
     public function buscarPorEmail($email) {
+        // (código do método buscarPorEmail sem alterações)
         $sql = 'SELECT * FROM usuarios WHERE email = ?';
+        $stmt = Conexao::getInstance()->prepare($sql);
+        $stmt->bindValue(1, $email);
+        $stmt->execute();
         
-        try {
-            $stmt = Conexao::getInstance()->prepare($sql);
-            $stmt->bindValue(1, $email);
-            $stmt->execute();
-            
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if ($resultado) {
-                $usuario = new Usuario();
-                $usuario->setId($resultado['id']);
-                $usuario->setNome($resultado['nome']);
-                $usuario->setEmail($resultado['email']);
-                $usuario->setSenha($resultado['senha']); // Armazena a senha com hash do banco
-                $usuario->setTipo($resultado['tipo']);
-                return $usuario;
-            }
-            
-            return null; // Retorna null se não encontrar o usuário
-        } catch (PDOException $e) {
-            die("Erro ao buscar usuário: " . $e->getMessage());
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($resultado) {
+            $usuario = new Usuario();
+            $usuario->setId($resultado['id']);
+            $usuario->setNome($resultado['nome']);
+            $usuario->setEmail($resultado['email']);
+            $usuario->setSenha($resultado['senha']);
+            $usuario->setTipo($resultado['tipo']);
+            return $usuario;
         }
+        return null;
     }
-
-    // Você pode adicionar métodos para atualizar e deletar usuários aqui (update, delete)
 }
 ?>

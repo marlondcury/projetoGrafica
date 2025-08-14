@@ -18,7 +18,6 @@ switch ($opcao) {
         
         $usuarioDao = new UsuarioDao();
         
-        // Verifica se o email já existe
         if ($usuarioDao->buscarPorEmail($email)) {
             header('Location: ../cadastro.php?status=erro_email_existente');
             exit();
@@ -28,9 +27,9 @@ switch ($opcao) {
         $novoUsuario->setNome($nome);
         $novoUsuario->setEmail($email);
         $novoUsuario->setSenha($senha);
-        $novoUsuario->setTipo('cliente'); // Todo novo cadastro é do tipo cliente
 
-        if ($usuarioDao->criar($novoUsuario)) {
+        // MUDANÇA: Chame o novo método que cria em ambas as tabelas
+        if ($usuarioDao->criarCliente($novoUsuario)) {
             header('Location: ../login.php?status=sucesso_cadastro');
         } else {
             header('Location: ../cadastro.php?status=erro_cadastro');
