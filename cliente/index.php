@@ -6,16 +6,18 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'cliente') {
     exit();
 }
 ?>
-<div class="row">
-    <div class="col-md-3">
-        <?php require_once '../includes/menu_cliente.php'; ?>
-    </div>
-    <div class="col-md-9">
-        <h2>Painel do Cliente</h2>
-        <p>Olá, <?php echo $_SESSION['usuario_nome']; ?>! Bem-vindo(a) à sua área pessoal.</p>
-        <hr>
-        <h4>Suas Últimas Encomendas</h4>
-        <p>Aqui você pode ver um resumo das suas encomendas. Para mais detalhes, acesse o menu ao lado.</p>
+<div class="mx-auto mt-5" style="max-width: 1200px;">
+    <div class="row">
+        <div class="col-md-3">
+            <?php require_once '../includes/menu_cliente.php'; ?>
         </div>
+        <div class="col-md-9">
+            <h2>Painel do Cliente</h2>
+            <p>Olá, <?php echo $_SESSION['usuario_nome']; ?>! Bem-vindo(a) à sua área pessoal.</p>
+            <hr>
+            <h4>Suas Últimas Encomendas</h4>
+            <p>Aqui você pode ver um resumo das suas encomendas. Para mais detalhes, acesse o menu ao lado.</p>
+        </div>
+    </div>
 </div>
 <?php require_once '../includes/rodape.php'; ?>
