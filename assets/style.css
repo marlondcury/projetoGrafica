@@ -76,3 +76,9 @@ body {
 .barcode-img {
     width: 60%;
 }
+
+.btn{
+    background-color: rgba(0,0,0,.03);
+    color: white;
+    border-radius: 5px;
+}
