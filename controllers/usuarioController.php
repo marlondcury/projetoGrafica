@@ -70,6 +70,30 @@ switch ($opcao) {
         session_destroy();
         header('Location: ../index.php');
         break;
+
+        case 'atualizar_dados':
+            // Garante que o usuário está logado
+            if (!isset($_SESSION['usuario_id'])) {
+                header('Location: ../login.php');
+                exit();
+            }
+    
+            // Pega os dados do formulário
+            $usuario_id = $_SESSION['usuario_id'];
+            $nome = $_POST['nome'] ?? '';
+            $telefone = $_POST['telefone'] ?? '';
+            $endereco = $_POST['endereco'] ?? '';
+    
+            $usuarioDao = new UsuarioDao();
+            if ($usuarioDao->atualizarCliente($usuario_id, $nome, $telefone, $endereco)) {
+                // Atualiza o nome na sessão para refletir a mudança imediatamente no menu
+                $_SESSION['usuario_nome'] = $nome;
+                // Redireciona de volta com uma mensagem de sucesso
+                header('Location: ../cliente/meus_dados.php?status=sucesso_update');
+            } else {
+                header('Location: ../cliente/meus_dados.php?status=erro_update');
+            }
+            break;
         
     default:
         header('Location: ../index.php');

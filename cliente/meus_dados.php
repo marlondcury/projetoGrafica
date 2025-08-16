@@ -1,24 +1,16 @@
 <?php
 require_once '../includes/cabecalho.php';
+require_once '../dao/UsuarioDao.php'; // Inclui o DAO
 
-// Lógica de segurança para verificar se o usuário é cliente
+// Lógica de segurança
 if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'cliente') {
     header('Location: /grafica_web/login.php');
     exit();
 }
 
-/*
- * Em um cenário real, estes dados viriam do banco de dados usando o ID do usuário da sessão.
- * Ex: $clienteDao = new ClienteDao(); $cliente = $clienteDao->buscarPorUsuarioId($_SESSION['usuario_id']);
- * Para este exemplo, usaremos dados estáticos.
- */
-$cliente_dados = [
-    'nome' => $_SESSION['usuario_nome'],
-    'email' => 'cliente@email.com', // Supondo que o email foi buscado no banco
-    'telefone' => '(27) 98877-6655',
-    'endereco' => 'Rua das Flores, 123, Bairro Jardim, Vitória - ES'
-];
-
+// Busca os dados REAIS do cliente no banco de dados
+$usuarioDao = new UsuarioDao();
+$cliente_dados = $usuarioDao->buscarClientePorUsuarioId($_SESSION['usuario_id']);
 ?>
 
 <div class="row">
@@ -29,6 +21,12 @@ $cliente_dados = [
         <h2>Meus Dados Cadastrais</h2>
         <p>Mantenha suas informações sempre atualizadas.</p>
         <hr>
+
+        <?php
+        // Feedback para o usuário após a atualização
+        if (isset($_GET['status']) && $_GET['status'] == 'sucesso_update'): ?>
+            <div class="alert alert-success">Dados atualizados com sucesso!</div>
+        <?php endif; ?>
 
         <div class="card">
             <div class="card-body">
@@ -53,27 +51,7 @@ $cliente_dados = [
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                 </form>
-
-                <hr class="my-4">
-
-                <h5 class="card-title">Alterar Senha</h5>
-                <form action="../controllers/usuarioController.php" method="POST">
-                     <input type="hidden" name="opcao" value="alterar_senha">
-                    <div class="mb-3">
-                        <label for="senha_atual" class="form-label">Senha Atual</label>
-                        <input type="password" class="form-control" id="senha_atual" name="senha_atual" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nova_senha" class="form-label">Nova Senha</label>
-                        <input type="password" class="form-control" id="nova_senha" name="nova_senha" required>
-                    </div>
-                     <div class="mb-3">
-                        <label for="confirma_nova_senha" class="form-label">Confirmar Nova Senha</label>
-                        <input type="password" class="form-control" id="confirma_nova_senha" name="confirma_nova_senha" required>
-                    </div>
-                    <button type="submit" class="btn btn-secondary">Alterar Senha</button>
-                </form>
-            </div>
+                </div>
         </div>
     </div>
 </div>

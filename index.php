@@ -9,13 +9,33 @@
 </div>
 
 <div class="row align-items-md-stretch">
-    <div class="col-md-6">
-        <div class="h-100 p-5 text-white bg-dark rounded-3">
-            <h2>Cadastre-se</h2>
-            <p>Crie sua conta gratuitamente e tenha acesso a um painel exclusivo para gerenciar suas encomendas, acompanhar o status e muito mais.</p>
-            <a href="cadastro.php" class="btn btn-outline-light" type="button">Criar Minha Conta</a>
+    
+    <?php // Inicia a verificação: O usuário está logado?
+    if (isset($_SESSION['usuario_id'])): 
+        // Define o link do painel com base no tipo de usuário
+        $link_painel = ($_SESSION['usuario_tipo'] == 'admin') ? 'admin/' : 'cliente/';
+    ?>
+
+        <div class="col-md-6">
+            <div class="h-100 p-5 text-white bg-success rounded-3">
+                <h2>Acessar Meu Painel</h2>
+                <p>Bem-vindo(a) de volta, <?= htmlspecialchars($_SESSION['usuario_nome']) ?>! Acesse seu painel para ver suas encomendas, gerenciar seus dados e muito mais.</p>
+                <a href="<?= $link_painel ?>" class="btn btn-outline-light" type="button">Ir para Meu Painel</a>
+            </div>
         </div>
-    </div>
+
+    <?php else: ?>
+
+        <div class="col-md-6">
+            <div class="h-100 p-5 text-white bg-dark rounded-3">
+                <h2>Cadastre-se</h2>
+                <p>Crie sua conta gratuitamente e tenha acesso a um painel exclusivo para gerenciar suas encomendas, acompanhar o status e muito mais.</p>
+                <a href="cadastro.php" class="btn btn-outline-light" type="button">Criar Minha Conta</a>
+            </div>
+        </div>
+
+    <?php endif; // Fim da verificação ?>
+
     <div class="col-md-6">
         <div class="h-100 p-5 bg-light border rounded-3">
             <h2>Fale Conosco</h2>
