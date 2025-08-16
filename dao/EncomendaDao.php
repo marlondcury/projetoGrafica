@@ -6,16 +6,14 @@ require_once __DIR__.'/../classes/Encomenda.php';
 class EncomendaDao {
 
     /**
-     * MÉTODO 1: Cria uma nova encomenda no banco de dados.
+     * MÉTODO 1: Para criar uma nova encomenda.
      */
     public function criar(Encomenda $encomenda) {
         $pdo = Conexao::getInstance();
         
         try {
-            // Inicia a transação
             $pdo->beginTransaction();
 
-            // Insere na tabela 'encomendas'
             $sqlEncomenda = 'INSERT INTO encomendas (cliente_id, data_encomenda, valor_total, status) VALUES (?, ?, ?, ?)';
             $stmtEncomenda = $pdo->prepare($sqlEncomenda);
             $stmtEncomenda->bindValue(1, $encomenda->getClienteId());
@@ -26,7 +24,6 @@ class EncomendaDao {
             
             $encomendaId = $pdo->lastInsertId();
 
-            // Insere cada item na tabela 'itens_encomenda'
             $sqlItem = 'INSERT INTO itens_encomenda (encomenda_id, servico_id, quantidade, valor_unitario, atributos) VALUES (?, ?, ?, ?, ?)';
             $stmtItem = $pdo->prepare($sqlItem);
 
@@ -39,13 +36,11 @@ class EncomendaDao {
                 $stmtItem->execute();
             }
 
-            // Confirma a transação
             $pdo->commit();
             
             return $encomendaId;
 
         } catch (PDOException $e) {
-            // Desfaz a transação em caso de erro
             $pdo->rollBack();
             die("Erro ao criar encomenda: " . $e->getMessage());
             return false;
@@ -53,7 +48,7 @@ class EncomendaDao {
     }
 
     /**
-     * MÉTODO 2: Lista todas as encomendas de um cliente específico.
+     * MÉTODO 2: Para listar as encomendas de um cliente.
      */
     public function listarPorClienteId($cliente_id) {
         $sql = 'SELECT * FROM encomendas WHERE cliente_id = ? ORDER BY data_encomenda DESC';
@@ -126,6 +121,5 @@ class EncomendaDao {
            return false;
         }
     }
-
 } // A chave que fecha a classe fica aqui no final.
 ?>

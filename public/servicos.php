@@ -13,8 +13,7 @@ $servicos = $servicoDao->listarTodos();
         <?php foreach ($servicos as $servico): ?>
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm">
-                    <img src="<?= htmlspecialchars($servico['imagem_url']) ?>" class="card-img-top" alt="<?= htmlspecialchars($servico['nome']) ?>">
-                    <div class="card-body d-flex flex-column">
+                    <img src="<?= htmlspecialchars($servico['imagem_url']) ?>" class="card-img-top" alt="<?= htmlspecialchars($servico['nome']) ?>">                    <div class="card-body d-flex flex-column">
                         <h5 class="card-title"><?= htmlspecialchars($servico['nome']) ?></h5>
                         <p class="card-text"><?= htmlspecialchars($servico['descricao']) ?></p>
                         <p class="card-text fw-bold mt-auto">A partir de R$ <?= number_format($servico['preco_base'], 2, ',', '.') ?></p>

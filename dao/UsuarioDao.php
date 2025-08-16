@@ -61,6 +61,53 @@ class UsuarioDao {
         return null;
     }
 
+
+    public function buscarClientePorUsuarioId($usuario_id) {
+        // Este SQL junta as duas tabelas para pegar todos os dados de uma vez
+        $sql = 'SELECT u.nome, u.email, c.telefone, c.endereco 
+                FROM usuarios u 
+                JOIN clientes c ON u.id = c.usuario_id 
+                WHERE u.id = ?';
+        
+        try {
+            $stmt = Conexao::getInstance()->prepare($sql);
+            $stmt->bindValue(1, $usuario_id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            die("Erro ao buscar dados do cliente: " . $e->getMessage());
+        }
+    }
+
+    public function atualizarCliente($usuario_id, $nome, $telefone, $endereco) {
+        $pdo = Conexao::getInstance();
+        try {
+            $pdo->beginTransaction();
+    
+            // 1. Atualiza o nome na tabela 'usuarios'
+            $sqlUsuario = "UPDATE usuarios SET nome = ? WHERE id = ?";
+            $stmtUsuario = $pdo->prepare($sqlUsuario);
+            $stmtUsuario->bindValue(1, $nome);
+            $stmtUsuario->bindValue(2, $usuario_id);
+            $stmtUsuario->execute();
+    
+            // 2. Atualiza telefone e endereço na tabela 'clientes'
+            $sqlCliente = "UPDATE clientes SET telefone = ?, endereco = ? WHERE usuario_id = ?";
+            $stmtCliente = $pdo->prepare($sqlCliente);
+            $stmtCliente->bindValue(1, $telefone);
+            $stmtCliente->bindValue(2, $endereco);
+            $stmtCliente->bindValue(3, $usuario_id);
+            $stmtCliente->execute();
+    
+            $pdo->commit();
+            return true;
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            die("Erro ao atualizar dados do cliente: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function listarTodos() {
         $sql = 'SELECT * FROM usuarios ORDER BY nome ASC';
         $stmt = Conexao::getInstance()->prepare($sql);
