@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/cabecalho.php';
 ?>
-<div class="mx-auto mt-5" style="max-width: 1200px;">
+<div class="container-xl mt-5">
 <div class="row">
     <div class="col-md-3">
         <?php require_once '../includes/menu_admin.php'; ?>

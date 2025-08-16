@@ -51,13 +51,13 @@ $listaServicos = $servicoDao->listarTodos();
             <tbody>
                 <?php foreach ($listaServicos as $servico): ?>
                 <tr>
-                    <td><?= $servico->getId(); ?></td>
-                    <td><?= $servico->getNome(); ?></td>
-                    <td><?= ucfirst($servico->getTipoServico()); ?></td>
-                    <td>R$ <?= number_format($servico->getPrecoBase(), 2, ',', '.') ?></td>
+                    <td><?= htmlspecialchars($servico['id']); ?></td>
+                    <td><?= htmlspecialchars($servico['nome']); ?></td>
+                    <td><?= ucfirst(htmlspecialchars($servico['tipo_servico'])); ?></td>
+                    <td>R$ <?= number_format($servico['preco_base'], 2, ',', '.') ?></td>
                     <td>
-                        <a href="servicoForm.php?id=<?= $servico->getId(); ?>" class="btn btn-warning btn-sm">Alterar</a>
-                        <a href="../controllers/controlerServico.php?opcao=excluir&id=<?= $servico->getId(); ?>" 
+                        <a href="servicoForm.php?id=<?= htmlspecialchars($servico['id']); ?>" class="btn btn-warning btn-sm">Alterar</a>
+                        <a href="../controllers/controlerServico.php?opcao=excluir&id=<?= htmlspecialchars($servico['id']); ?>" 
                            onclick="return confirm('Tem certeza que deseja excluir este serviço?');" 
                            class="btn btn-danger btn-sm">Excluir</a>
                     </td>

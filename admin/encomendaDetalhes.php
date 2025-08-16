@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
                             <?php foreach ($itens as $item): ?>
                                 <?php $servico = $servicoDao->buscarPorId($item['servico_id']); ?>
                                 <tr>
-                                    <td><?= $servico->getNome() ?? 'N/A'; ?></td>
+                                    <td><?= htmlspecialchars($servico['nome'] ?? 'N/A'); ?></td>
                                     <td><?= $item['quantidade']; ?></td>
                                     <td>R$ <?= number_format($item['valor_unitario'], 2, ',', '.'); ?></td>
                                     <td>

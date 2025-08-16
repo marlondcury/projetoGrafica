@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <img src="https://via.placeholder.com/500x500.png?text=Nossa+Gráfica" class="img-fluid rounded" alt="Imagem da Gráfica">
+            <img src="/grafica_web/assets/img/banner.jpg" class="img-fluid rounded" alt="Imagem da Gráfica">
         </div>
     </div>
 

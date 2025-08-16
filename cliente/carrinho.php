@@ -58,7 +58,7 @@ $total_carrinho = 0;
                 <h4>Total: <span class="float-end">R$ <?= number_format($total_carrinho, 2, ',', '.') ?></span></h4>
                 <div class="d-grid gap-2 mt-3">
                     <a href="../controllers/encomendaController.php?opcao=finalizar" class="btn btn-success btn-lg">Finalizar Compra</a>
-                    <a href="../public/servicos.php" class="btn btn-outline-secondary">Continuar Comprando</a>
+                    <a href="/grafica_web/servicos.php" class="btn btn-outline-secondary">Continuar Comprando</a>
                 </div>
             </div>
         </div>
@@ -67,7 +67,7 @@ $total_carrinho = 0;
             <h4 class="alert-heading">Seu carrinho está vazio!</h4>
             <p>Adicione serviços para poder finalizar sua encomenda.</p>
             <hr>
-            <a href="../public/servicos.php" class="btn btn-primary">Ver Serviços</a>
+            <a href="/grafica_web/servicos.php" class="btn btn-primary">Ver Serviços</a>
         </div>
     <?php endif; ?>
 </div>

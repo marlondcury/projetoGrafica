@@ -1,5 +1,5 @@
 <?php require_once 'includes/cabecalho.php'; ?>
-<div class="mx-auto mt-5" style="max-width: 1200px;">
+<div class="container-xl mt-5">
     <div class="p-5 mb-4 bg-light rounded-3">
         <div class="container-fluid py-5">
             <h1 class="display-5 fw-bold">Bem-vindo à Gráfica Rápida Online</h1>

@@ -28,7 +28,7 @@ if (!$servico) {
 }
 ?>
 
-<div class="mx-auto mt-5" style="max-width: 1200px;">
+<div class="container-xl mt-5">
     <h1 class="mb-4">Personalizar Serviço: <?= htmlspecialchars($servico['nome']) ?></h1>
 
     <form action="/grafica_web/controllers/encomendaController.php" method="POST">

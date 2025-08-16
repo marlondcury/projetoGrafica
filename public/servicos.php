@@ -7,7 +7,7 @@ $servicoDao = new ServicoDao();
 $servicos = $servicoDao->listarTodos();
 ?>
 
-<div class="mx-auto mt-5" style="max-width: 1200px;">
+<div class="container-xl mt-5">
     <h1 class="mb-4">Nossos Serviços</h1>
     <div class="row">
         <?php if ($servicos): ?>

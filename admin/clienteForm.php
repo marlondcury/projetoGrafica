@@ -7,7 +7,7 @@ require_once __DIR__.'/../classes/Usuario.php';
 
 // Verificação de segurança: apenas administradores podem acessar
 if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
-    header('Location: ../public/login.php?erro=acesso_negado');
+    header('Location: /grafica_web/login.php?erro=acesso_negado');
     exit();
 }
 
