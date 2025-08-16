@@ -1,6 +1,5 @@
 <?php 
 require_once '../includes/cabecalho.php'; 
-// Inclui o DAO para buscar os serviços no banco
 require_once '../dao/ServicoDao.php';
 
 // Cria a instância do DAO e busca todos os serviços

@@ -32,7 +32,7 @@ if (!isset($_SESSION['usuario_id'])) {
 $opcao = $_REQUEST['opcao'] ?? 'ver';
 
 switch($opcao) {
-    case 'adicionar':
+    case 'adicionar': //adiciona um item no carrinho
         $servico_id = filter_input(INPUT_POST, 'servico_id', FILTER_VALIDATE_INT);
         $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_VALIDATE_INT);
         $atributos = $_POST['atributos'] ?? [];
@@ -67,7 +67,7 @@ switch($opcao) {
         header('Location: ../cliente/carrinho.php?status=item_adicionado');
         break;
 
-    case 'remover_item':
+    case 'remover_item': // remover item no carrinho
         $index = $_GET['index'] ?? -1;
         if (isset($_SESSION['carrinho'][$index])) {
             unset($_SESSION['carrinho'][$index]);
@@ -76,7 +76,7 @@ switch($opcao) {
         header('Location: ../cliente/carrinho.php');
         break;
         
-        case 'finalizar':
+        case 'finalizar': // finalizar compra
             if (empty($_SESSION['carrinho'])) {
                 header('Location: ../cliente/carrinho.php');
                 exit();
@@ -117,8 +117,33 @@ switch($opcao) {
             }
             break;
         
-    default:
-         header('Location: ../cliente/carrinho.php');
-        break;
+            case 'atualizar_status':
+                case 'atualizar_status':
+                    // VERIFICAÇÃO DE SEGURANÇA: apenas admin pode alterar o status
+                    if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
+                        header('Location: ../public/login.php?erro=acesso_negado');
+                        exit();
+                    }
+                
+                    $id = $_POST['id'] ?? null;
+                    $novoStatus = $_POST['novo_status'] ?? null;
+                
+                    if (!$id || empty($novoStatus)) {
+                        header('Location: ../admin/gerenciarEncomendas.php?id=' . $id . '&status=erro&acao=dados_invalidos');
+                        exit();
+                    }
+                    
+                    $encomendaDao = new EncomendaDao();
+                    
+                    if ($encomendaDao->atualizarStatus($id, $novoStatus)) {
+                        header('Location: ../admin/gerenciarEncomendas.php?id=' . $id . '&status=sucesso&acao=status_atualizado');
+                    } else {
+                        header('Location: ../admin/gerenciarEncomendas.php?id=' . $id . '&status=erro&acao=status_nao_atualizado');
+                    }
+                    break;
+            default:
+                // Padrão redireciona para a página do cliente se a opção não for reconhecida
+                header('Location: ../cliente/carrinho.php');
+                break;
 }
 ?>

@@ -6,7 +6,7 @@ require_once '../includes/cabecalho.php';
         <?php require_once '../includes/menu_admin.php'; ?>
     </div>
     <div class="col-md-9">
-        <h2>Painel do Cliente</h2>
+        <h2>Painel do Administrador</h2>
         <p>Olá, <?php echo $_SESSION['usuario_nome']; ?>! Bem-vindo(a) à sua área pessoal.</p>
         <hr>
     </div>

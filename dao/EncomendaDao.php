@@ -70,5 +70,62 @@ class EncomendaDao {
         }
     }
 
+    public function listarTodos() {
+        $sql = 'SELECT * FROM encomendas ORDER BY data_encomenda DESC';
+        try {
+            $stmt = Conexao::getInstance()->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            die("Erro ao listar todas as encomendas: " . $e->getMessage());
+        }
+    }
+    
+    public function buscarDetalhesPorId($id) {
+        $pdo = Conexao::getInstance();
+        try {
+            // 1. Busca os detalhes da encomenda principal
+            $sqlEncomenda = 'SELECT * FROM encomendas WHERE id = ?';
+            $stmtEncomenda = $pdo->prepare($sqlEncomenda);
+            $stmtEncomenda->bindValue(1, $id, PDO::PARAM_INT);
+            $stmtEncomenda->execute();
+            $dadosEncomenda = $stmtEncomenda->fetch(PDO::FETCH_ASSOC);
+
+            if (!$dadosEncomenda) {
+                return null;
+            }
+
+            // 2. Busca os itens da encomenda
+            $sqlItens = 'SELECT * FROM itens_encomenda WHERE encomenda_id = ?';
+            $stmtItens = $pdo->prepare($sqlItens);
+            $stmtItens->bindValue(1, $id, PDO::PARAM_INT);
+            $stmtItens->execute();
+            $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
+
+            // Retorna um array com os dados da encomenda e seus itens
+            return [
+                'encomenda' => $dadosEncomenda,
+                'itens' => $itens
+            ];
+            
+        } catch (PDOException $e) {
+            die("Erro ao buscar detalhes da encomenda: " . $e->getMessage());
+        }
+    }
+
+    public function atualizarStatus($id, $novoStatus) {
+        $sql = 'UPDATE encomendas SET status = ? WHERE id = ?';
+        try {
+            $stmt = Conexao::getInstance()->prepare($sql);
+            $stmt->bindValue(1, $novoStatus);
+            $stmt->bindValue(2, $id, PDO::PARAM_INT);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+           // Adicione esta linha para ver a mensagem de erro exata
+           die("Erro ao atualizar status: " . $e->getMessage()); 
+           return false;
+        }
+    }
+
 } // A chave que fecha a classe fica aqui no final.
 ?>
