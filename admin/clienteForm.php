@@ -24,7 +24,7 @@ if (isset($_GET['id'])) {
 }
 ?>
 
-<div class="container mt-5">
+<div class="container container-xl mx-auto mt-5">
     <h1 class="mb-4"><?= $titulo_pagina; ?></h1>
     <p><a href="gerenciar_clientes.php">Voltar para a lista de clientes</a></p>
     

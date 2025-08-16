@@ -17,7 +17,7 @@ $servicoDao = new ServicoDao();
 $listaServicos = $servicoDao->listarTodos();
 ?>
 
-<div class="row">
+<div class="row container-xl mx-auto">
     <div class="col-md-3">
         <?php require_once '../includes/menu_admin.php'; ?>
     </div>
