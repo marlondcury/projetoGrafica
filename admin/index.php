@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/cabecalho.php';
 ?>
+<div class="mx-auto mt-5" style="max-width: 1200px;">
 <div class="row">
     <div class="col-md-3">
         <?php require_once '../includes/menu_admin.php'; ?>
@@ -10,5 +11,6 @@ require_once '../includes/cabecalho.php';
         <p>Olá, <?php echo $_SESSION['usuario_nome']; ?>! Bem-vindo(a) à sua área pessoal.</p>
         <hr>
     </div>
+</div>
 </div>
 <?php require_once '../includes/rodape.php'; ?>
