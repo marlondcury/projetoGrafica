@@ -12,9 +12,15 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'admin') {
 require_once __DIR__.'/../dao/ServicoDao.php';
 require_once __DIR__.'/../classes/Servico.php';
 
-// Instanciar o DAO e buscar os dados do banco
+// Instanciar o DAO e buscar os dados do banco com possíveis filtros
 $servicoDao = new ServicoDao();
-$listaServicos = $servicoDao->listarTodos();
+$filtros = [];
+if (!empty($_GET['q'])) $filtros['nome'] = trim($_GET['q']);
+if (!empty($_GET['tipo'])) $filtros['tipo'] = trim($_GET['tipo']);
+if (!empty($_GET['id'])) $filtros['id'] = (int) $_GET['id'];
+
+$listaServicos = $servicoDao->buscar($filtros);
+$tiposDisponiveis = $servicoDao->listarTipos();
 ?>
 
 <div class="row container-xl mx-auto">
@@ -27,6 +33,27 @@ $listaServicos = $servicoDao->listarTodos();
             <h1>Gerenciar Serviços</h1>
             <a href="servicoForm.php" class="btn btn-primary">Adicionar Novo Serviço</a>
         </div>
+
+        <form class="row g-2 mb-3" method="GET" action="/grafica_web/admin/gerenciar_servicos.php">
+            <div class="col-md-4">
+                <input type="text" name="q" value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" class="form-control" placeholder="Buscar por nome">
+            </div>
+            <div class="col-md-3">
+                <select name="tipo" class="form-select">
+                    <option value="">Todos os tipos</option>
+                    <?php foreach ($tiposDisponiveis as $tipo): ?>
+                        <option value="<?= htmlspecialchars($tipo) ?>" <?= (isset($_GET['tipo']) && $_GET['tipo'] === $tipo) ? 'selected' : '' ?>><?= htmlspecialchars(ucfirst($tipo)) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="id" value="<?= isset($_GET['id']) ? (int)$_GET['id'] : '' ?>" class="form-control" placeholder="Código">
+            </div>
+            <div class="col-md-3 d-flex">
+                <button type="submit" class="btn btn-secondary me-2">Filtrar</button>
+                <a href="/grafica_web/admin/gerenciar_servicos.php" class="btn btn-outline-secondary">Limpar</a>
+            </div>
+        </form>
 
         <?php if (isset($_GET['status']) && $_GET['status'] == 'sucesso'): ?>
             <div class="alert alert-success">

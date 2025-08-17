@@ -2,13 +2,49 @@
 require_once '../includes/cabecalho.php'; 
 require_once '../dao/ServicoDao.php';
 
-// Cria a instância do DAO e busca todos os serviços
+// Cria a instância do DAO
 $servicoDao = new ServicoDao();
-$servicos = $servicoDao->listarTodos();
+
+// Recebe parâmetros de busca (nome, tipo, id)
+$filtros = [];
+if (!empty($_GET['q'])) {
+    $filtros['nome'] = trim($_GET['q']);
+}
+if (!empty($_GET['tipo'])) {
+    $filtros['tipo'] = trim($_GET['tipo']);
+}
+if (!empty($_GET['id'])) {
+    $filtros['id'] = (int) $_GET['id'];
+}
+
+$servicos = $servicoDao->buscar($filtros);
+$tiposDisponiveis = $servicoDao->listarTipos();
 ?>
 
 <div class="container-xl mt-5">
     <h1 class="mb-4">Nossos Serviços</h1>
+
+    <form class="row g-2 mb-4" method="GET" action="/grafica_web/public/servicos.php">
+        <div class="col-md-4">
+            <input type="text" name="q" value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" class="form-control" placeholder="Buscar por nome">
+        </div>
+        <div class="col-md-3">
+            <select name="tipo" class="form-select">
+                <option value="">Todos os tipos</option>
+                <?php foreach ($tiposDisponiveis as $tipo): ?>
+                    <option value="<?= htmlspecialchars($tipo) ?>" <?= (isset($_GET['tipo']) && $_GET['tipo'] === $tipo) ? 'selected' : '' ?>><?= htmlspecialchars(ucfirst($tipo)) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="id" value="<?= isset($_GET['id']) ? (int)$_GET['id'] : '' ?>" class="form-control" placeholder="Código">
+        </div>
+        <div class="col-md-3 d-flex">
+            <button type="submit" class="btn btn-primary me-2">Buscar</button>
+            <a href="/grafica_web/public/servicos.php" class="btn btn-outline-secondary">Limpar</a>
+        </div>
+    </form>
+
     <div class="row">
         <?php if ($servicos): ?>
             <?php foreach ($servicos as $servico): ?>
