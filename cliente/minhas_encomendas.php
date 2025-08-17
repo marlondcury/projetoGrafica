@@ -16,7 +16,7 @@ $encomendaDao = new EncomendaDao();
 $encomendas = $encomendaDao->listarPorClienteId($_SESSION['usuario_id']);
 ?>
 
-<div class="row">
+<div class="row container-xl mx-auto mt-4">
     <div class="col-md-3">
         <?php require_once '../includes/menu_cliente.php'; ?>
     </div>

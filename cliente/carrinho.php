@@ -12,7 +12,7 @@ $carrinho = $_SESSION['carrinho'] ?? [];
 $total_carrinho = 0;
 ?>
 
-<div class="container mt-5">
+<div class="container-xl mx-auto mt-5">
     <h2>Meu Carrinho de Compras</h2>
     <hr>
     <?php 

@@ -12,7 +12,7 @@ $data_vencimento = date('d/m/Y', strtotime('+3 days'));
 $linha_digitavel = '00190.00009 01027.234563 00000.000114 1 98760000016550';
 ?>
 
-<div class="container mt-4">
+<div class="container-xl mx-auto mt-4">
     <div class="text-center">
         <h3>Encomenda #<?= htmlspecialchars($encomenda_id) ?> realizada com sucesso!</h3>
         <p class="lead">Pague o boleto abaixo para confirmar seu pedido.</p>
@@ -39,13 +39,13 @@ $linha_digitavel = '00190.00009 01027.234563 00000.000114 1 98760000016550';
                 <div class="boleto-label">Pagador</div>
                 <div class="boleto-valor"><?= htmlspecialchars($cliente_nome) ?></div>
             </div>
-             <div class="boleto-campo data-vencimento">
+            <div class="boleto-campo data-vencimento">
                 <div class="boleto-label">Data de Vencimento</div>
                 <div class="boleto-valor fw-bold"><?= $data_vencimento ?></div>
             </div>
         </div>
         <div class="boleto-row">
-             <div class="boleto-campo">
+            <div class="boleto-campo">
                 <div class="boleto-label">Nosso Número</div>
                 <div class="boleto-valor">123456789-0</div>
             </div>

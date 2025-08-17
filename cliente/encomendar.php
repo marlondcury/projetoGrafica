@@ -28,7 +28,7 @@ if (!$servico) {
 }
 ?>
 
-<div class="container-xl mt-5">
+<div class="container-xl mx-auto mt-5">
     <h1 class="mb-4">Personalizar Serviço: <?= htmlspecialchars($servico['nome']) ?></h1>
 
     <form action="/grafica_web/controllers/encomendaController.php" method="POST">
@@ -51,7 +51,7 @@ if (!$servico) {
                 </select>
             </div>
         <?php elseif ($servico['tipo_servico'] == 'banner'): ?>
-             <div class="mb-3">
+            <div class="mb-3">
                 <label for="material" class="form-label">Material</label>
                 <select name="atributos[material]" id="material" class="form-select">
                     <option value="lona_fosca">Lona Fosca</option>

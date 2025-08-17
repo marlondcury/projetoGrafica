@@ -23,7 +23,7 @@ $encomendas_abertas = count(array_filter($encomendas, function($e) {
 }));
 ?>
 
-<div class="container-xl mt-4">
+<div class="container-xl mx-auto mt-4">
     <div class="row">
     <div class="col-md-3">
         <?php require_once '../includes/menu_cliente.php'; ?>
