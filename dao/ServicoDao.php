@@ -21,11 +21,6 @@ class ServicoDao {
         return $dados ?: null;
     }
 
-    /**
-     * Busca serviços aplicando filtros opcionais.
-     * Aceita filtros: 'id' (int), 'nome' (string, busca parcial) e 'tipo' (string, busca parcial/exata).
-     * Retorna array de resultados (associativos).
-     */
     public function buscar(array $filtros = []) {
         $sql = 'SELECT id, nome, descricao, preco_base, imagem_url, tipo_servico FROM servicos WHERE 1=1';
         $params = [];
@@ -55,9 +50,6 @@ class ServicoDao {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Retorna a lista de tipos de serviço existentes (distinct) para popular selects.
-     */
     public function listarTipos() {
         $sql = 'SELECT DISTINCT tipo_servico FROM servicos ORDER BY tipo_servico ASC';
         $stmt = Conexao::getInstance()->prepare($sql);
@@ -112,5 +104,26 @@ class ServicoDao {
             return false;
         }
     }
+
+    // Adicione este novo método à sua classe ServicoDao
+public function buscarObjetoPorId($id) {
+    $sql = 'SELECT * FROM servicos WHERE id = ?';
+    $stmt = Conexao::getInstance()->prepare($sql);
+    $stmt->bindValue(1, $id);
+    $stmt->execute();
+    
+    $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($dados) {
+        $servico = new Servico();
+        $servico->setId($dados['id']);
+        $servico->setNome($dados['nome']);
+        $servico->setDescricao($dados['descricao']);
+        $servico->setPrecoBase($dados['preco_base']);
+        $servico->setImagemUrl($dados['imagem_url']);
+        $servico->setTipoServico($dados['tipo_servico']);
+        return $servico;
+    }
+    return null;
+}
 }
 ?>

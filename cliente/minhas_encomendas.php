@@ -55,7 +55,7 @@ $encomendas = $encomendaDao->listarPorClienteId($_SESSION['usuario_id']);
                                     <span class="badge <?= $badge_class ?>"><?= str_replace('_', ' ', ucfirst($status)) ?></span>
                                 </td>
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">Ver Detalhes</a>
+                                    <a href="encomendaDetalhes.php?id=<?= $encomenda['id'] ?>" class="btn btn-sm btn-outline-primary">Ver Detalhes</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
