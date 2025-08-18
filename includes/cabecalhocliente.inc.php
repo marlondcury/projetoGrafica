@@ -17,10 +17,10 @@
         <li class="nav-item">
           <a class="nav-link" href="/grafica_web/public/fale_conosco.php">Fale Conosco</a>
         </li>
+        <li class="nav-item"><a class="nav-link active" href="/grafica_web/cliente/">Minha Conta</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="/grafica_web/cliente/carrinho.php"><ion-icon name="cart-outline"></ion-icon></a>
-        </li>
-        <li class="nav-item"><a class="nav-link active" href="/grafica_web/cliente/">Minha Conta</a>
         </li>
         <li class="nav-item"><a class="nav-link" href="/grafica_web/controllers/usuarioController.php?opcao=logout">Sair</a>
         </li>

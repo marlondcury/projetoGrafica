@@ -22,8 +22,9 @@ if (isset($_GET['id'])) {
 
 <div class="container container-xl mx-auto mt-5">
     <h1><?= $titulo_pagina; ?></h1>
-    <p><a href="gerenciar_servicos.php">Voltar para a lista de serviços</a></p>
-    
+    <a href="gerenciar_servicos.php" class="btn btn-secondary mb-3">
+        &larr; Voltar para a lista de serviços
+    </a>    
     <form action="../controllers/controlerServico.php" method="POST">
         <input type="hidden" name="opcao" value="<?= $acao_form; ?>">
         
