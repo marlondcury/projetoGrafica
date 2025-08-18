@@ -1,11 +1,9 @@
 <?php
 require_once '../includes/cabecalho.php';
+// Adicione os DAOs necessários
+require_once __DIR__.'/../dao/EncomendaDao.php';
+require_once __DIR__.'/../dao/UsuarioDao.php';
 
-// Lógica de segurança para verificar se o usuário é admin
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'admin') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
 
 $vendas = null;
 $total_faturado = 0;
@@ -15,17 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data_inicio = $_POST['data_inicio'];
     $data_fim = $_POST['data_fim'];
 
-    /*
-     * Em um cenário real, aqui seria feita a chamada ao DAO:
-     * $encomendaDao = new EncomendaDao();
-     * $vendas = $encomendaDao->buscarPorIntervaloDeDatas($data_inicio, $data_fim);
-     * Para este exemplo, vamos simular o resultado.
-     */
-    $vendas = [
-        ['id' => 101, 'cliente_nome' => 'Bia Martins', 'data_encomenda' => '2025-08-10 10:30:00', 'valor_total' => 75.50, 'status' => 'Concluído'],
-        ['id' => 102, 'cliente_nome' => 'Carlos Furtado', 'data_encomenda' => '2025-08-11 14:00:00', 'valor_total' => 120.00, 'status' => 'Concluído'],
-        ['id' => 103, 'cliente_nome' => 'Marlon Aguiar', 'data_encomenda' => '2025-08-12 09:15:00', 'valor_total' => 45.00, 'status' => 'Pago']
-    ];
+    // Instancia o DAO e chama o novo método
+    $encomendaDao = new EncomendaDao();
+    $vendas = $encomendaDao->buscarPorIntervaloDeDatas($data_inicio, $data_fim);
     
     foreach ($vendas as $venda) {
         $total_faturado += $venda['valor_total'];
@@ -88,7 +78,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td><?= htmlspecialchars($venda['cliente_nome']) ?></td>
                                     <td><?= date('d/m/Y H:i', strtotime($venda['data_encomenda'])) ?></td>
                                     <td>
-                                        <span class="badge bg-success"><?= htmlspecialchars($venda['status']) ?></span>
+                                        <?php
+                                            $status_class = 'bg-secondary';
+                                            switch ($venda['status']) {
+                                                case 'pago':
+                                                case 'concluido':
+                                                    $status_class = 'bg-success'; 
+                                                    break;
+                                                case 'em_aberto':
+                                                    $status_class = 'bg-info';
+                                                    break;
+                                                case 'cancelado':
+                                                    $status_class = 'bg-danger';
+                                                    break;
+                                            }
+                                        ?>
+                                        <span class="badge <?= $status_class; ?>">
+                                            <?= htmlspecialchars(ucfirst($venda['status'])) ?>
+                                        </span>
                                     </td>
                                     <td>R$ <?= number_format($venda['valor_total'], 2, ',', '.') ?></td>
                                 </tr>

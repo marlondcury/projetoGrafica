@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once '../includes/cabecalho.php';
 
 require_once __DIR__.'/../dao/ServicoDao.php';
 require_once __DIR__.'/../classes/Servico.php';
@@ -59,3 +59,5 @@ if (isset($_GET['id'])) {
         <button type="submit" class="btn btn-success">Salvar Serviço</button>
     </form>
 </div>
+
+<?php require_once '../includes/rodape.php';?>

@@ -121,5 +121,28 @@ class EncomendaDao {
            return false;
         }
     }
-} // A chave que fecha a classe fica aqui no final.
+
+        
+    public function buscarPorIntervaloDeDatas($dataInicio, $dataFim) {
+        $sql = 'SELECT e.*, u.nome AS cliente_nome 
+                FROM encomendas AS e
+                JOIN clientes AS c ON e.cliente_id = c.id
+                JOIN usuarios AS u ON c.usuario_id = u.id
+                WHERE e.data_encomenda BETWEEN ? AND ?
+                ORDER BY e.data_encomenda DESC';
+        
+        try {
+            $pdo = Conexao::getInstance();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(1, $dataInicio . ' 00:00:00');
+            $stmt->bindValue(2, $dataFim . ' 23:59:59');
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (PDOException $e) {
+            die("Erro ao buscar relatório de vendas: " . $e->getMessage());
+        }
+    }
+} 
 ?>
