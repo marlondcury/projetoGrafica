@@ -82,3 +82,18 @@ body {
     color: white;
     border-radius: 5px;
 }
+
+.logo {
+    height: auto;
+    max-height: 40px; 
+    width: auto;
+    max-width: 100%;
+    margin-right: 15px;
+    vertical-align: middle;
+    transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
