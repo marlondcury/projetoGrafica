@@ -1,12 +1,12 @@
 <?php require_once 'includes/cabecalho.php'; ?>
-
-<div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Bem-vindo à Gráfica Rápida Online</h1>
-        <p class="col-md-8 fs-4">A solução completa para suas necessidades de impressão. De cartões de visita a banners em lona, oferecemos qualidade e agilidade.</p>
-        <a href="public/servicos.php" class="btn btn-primary btn-lg" type="button">Conheça Nossos Serviços</a>
+<div class="container-xl mt-5">
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Bem-vindo à Gráfica Rápida Online</h1>
+            <p class="col-md-8 fs-4">A solução completa para suas necessidades de impressão. De cartões de visita a banners em lona, oferecemos qualidade e agilidade.</p>
+            <a href="public/servicos.php" class="btn btn-primary btn-lg" type="button">Conheça Nossos Serviços</a>
+        </div>
     </div>
-</div>
 
 <div class="row align-items-md-stretch">
     

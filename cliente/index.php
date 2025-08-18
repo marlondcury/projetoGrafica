@@ -23,7 +23,8 @@ $encomendas_abertas = count(array_filter($encomendas, function($e) {
 }));
 ?>
 
-<div class="row">
+<div class="container-xl mx-auto mt-4">
+    <div class="row">
     <div class="col-md-3">
         <?php require_once '../includes/menu_cliente.php'; ?>
     </div>
@@ -80,7 +81,7 @@ $encomendas_abertas = count(array_filter($encomendas, function($e) {
         <?php else: ?>
             <div class="alert alert-info">
                 Você ainda não realizou nenhuma encomenda. Que tal começar agora?
-                <a href="../public/servicos.php" class="alert-link">Ver nossos serviços</a>.
+                <a href="/grafica_web/servicos.php" class="alert-link">Ver nossos serviços</a>.
             </div>
         <?php endif; ?>
     </div>

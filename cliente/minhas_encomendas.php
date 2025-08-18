@@ -16,7 +16,7 @@ $encomendaDao = new EncomendaDao();
 $encomendas = $encomendaDao->listarPorClienteId($_SESSION['usuario_id']);
 ?>
 
-<div class="row">
+<div class="row container-xl mx-auto mt-4">
     <div class="col-md-3">
         <?php require_once '../includes/menu_cliente.php'; ?>
     </div>
@@ -55,7 +55,7 @@ $encomendas = $encomendaDao->listarPorClienteId($_SESSION['usuario_id']);
                                     <span class="badge <?= $badge_class ?>"><?= str_replace('_', ' ', ucfirst($status)) ?></span>
                                 </td>
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">Ver Detalhes</a>
+                                    <a href="encomendaDetalhes.php?id=<?= $encomenda['id'] ?>" class="btn btn-sm btn-outline-primary">Ver Detalhes</a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

@@ -1,46 +1,96 @@
-<?php require_once '../includes/cabecalho.php'; ?>
 <?php
-    // Lógica para verificar se é admin
-    if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'admin') {
-        header("Location: /grafica_web/login.php");
-        exit();
-    }
-    // Dados de exemplo
-    $servicos = [
-        ['id' => 1, 'nome' => 'Impressão A4', 'tipo_servico' => 'reproducao', 'preco_base' => 0.50],
-        ['id' => 2, 'nome' => 'Banner em Lona', 'tipo_servico' => 'banner', 'preco_base' => 80.00]
-    ];
+// O cabeçalho já contém session_start()
+require_once '../includes/cabecalho.php'; 
+
+// Lógica de segurança para verificar se o usuário é admin
+if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'admin') {
+    header('Location: /grafica_web/login.php');
+    exit();
+}
+
+// Incluir as classes DAO e Modelo
+require_once __DIR__.'/../dao/ServicoDao.php';
+require_once __DIR__.'/../classes/Servico.php';
+
+// Instanciar o DAO e buscar os dados do banco com possíveis filtros
+$servicoDao = new ServicoDao();
+$filtros = [];
+if (!empty($_GET['q'])) $filtros['nome'] = trim($_GET['q']);
+if (!empty($_GET['tipo'])) $filtros['tipo'] = trim($_GET['tipo']);
+if (!empty($_GET['id'])) $filtros['id'] = (int) $_GET['id'];
+
+$listaServicos = $servicoDao->buscar($filtros);
+$tiposDisponiveis = $servicoDao->listarTipos();
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Gerenciar Serviços</h1>
-    <a href="#" class="btn btn-primary">Adicionar Novo Serviço</a>
+<div class="row container-xl mx-auto">
+    <div class="col-md-3">
+        <?php require_once '../includes/menu_admin.php'; ?>
+    </div>
+
+    <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Gerenciar Serviços</h1>
+            <a href="servicoForm.php" class="btn btn-primary">Adicionar Novo Serviço</a>
+        </div>
+
+        <form class="row g-2 mb-3" method="GET" action="/grafica_web/admin/gerenciar_servicos.php">
+            <div class="col-md-4">
+                <input type="text" name="q" value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" class="form-control" placeholder="Buscar por nome">
+            </div>
+            <div class="col-md-3">
+                <select name="tipo" class="form-select">
+                    <option value="">Todos os tipos</option>
+                    <?php foreach ($tiposDisponiveis as $tipo): ?>
+                        <option value="<?= htmlspecialchars($tipo) ?>" <?= (isset($_GET['tipo']) && $_GET['tipo'] === $tipo) ? 'selected' : '' ?>><?= htmlspecialchars(ucfirst($tipo)) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="id" value="<?= isset($_GET['id']) ? (int)$_GET['id'] : '' ?>" class="form-control" placeholder="Código">
+            </div>
+            <div class="col-md-3 d-flex">
+                <button type="submit" class="btn btn-secondary me-2">Filtrar</button>
+                <a href="/grafica_web/admin/gerenciar_servicos.php" class="btn btn-outline-secondary">Limpar</a>
+            </div>
+        </form>
+
+        <?php if (isset($_GET['status']) && $_GET['status'] == 'sucesso'): ?>
+            <div class="alert alert-success">
+                Serviço <?= $_GET['acao']; ?> com sucesso!
+            </div>
+        <?php elseif (isset($_GET['status']) && $_GET['status'] == 'erro'): ?>
+            <div class="alert alert-danger">
+                Erro ao tentar <?= $_GET['acao']; ?> o serviço.
+            </div>
+        <?php endif; ?>
+
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Tipo</th>
+                    <th>Preço Base</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($listaServicos as $servico): ?>
+                <tr>
+                    <td><?= htmlspecialchars($servico['id']); ?></td>
+                    <td><?= htmlspecialchars($servico['nome']); ?></td>
+                    <td><?= ucfirst(htmlspecialchars($servico['tipo_servico'])); ?></td>
+                    <td>R$ <?= number_format($servico['preco_base'], 2, ',', '.') ?></td>
+                    <td>
+                        <a href="servicoForm.php?id=<?= htmlspecialchars($servico['id']); ?>" class="btn btn-warning btn-sm">Alterar</a>
+                        <a href="../controllers/controlerServico.php?opcao=excluir&id=<?= htmlspecialchars($servico['id']); ?>" 
+                           onclick="return confirm('Tem certeza que deseja excluir este serviço?');" 
+                           class="btn btn-danger btn-sm">Excluir</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<table class="table table-striped table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Tipo</th>
-            <th>Preço Base</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($servicos as $servico): ?>
-        <tr>
-            <td><?= $servico['id'] ?></td>
-            <td><?= $servico['nome'] ?></td>
-            <td><?= ucfirst($servico['tipo_servico']) ?></td>
-            <td>R$ <?= number_format($servico['preco_base'], 2, ',', '.') ?></td>
-            <td>
-                <a href="#" class="btn btn-warning btn-sm">Alterar</a>
-                <a href="#" class="btn btn-danger btn-sm">Excluir</a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
-
-<?php require_once '../includes/rodape.php'; ?>

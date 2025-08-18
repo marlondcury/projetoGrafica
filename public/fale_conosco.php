@@ -49,4 +49,10 @@
                     <label for="mensagem" class="form-label">Mensagem</label>
                     <textarea class="form-control" id="mensagem" name="mensagem" rows="5" required></textarea>
                 </div>
-                <button
+                <button class="btn">Enviar Mensagem!</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php require_once '../includes/rodape.php'; ?>
