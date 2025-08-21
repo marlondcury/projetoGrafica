@@ -7,7 +7,7 @@ require_once '../includes/cabecalho.php';
 <div class="row">
     <div class="col-md-3">
         <?php 
-            require_once '../includes/menu_admin.php'; 
+            require_once '../includes/menuAdmin.php'; 
         ?>
     </div>
     <div class="col-md-9">
@@ -16,9 +16,9 @@ require_once '../includes/cabecalho.php';
         <hr>
         <h4>Acesso Rápido</h4>
         <div class="list-group">
-            <a href="gerenciar_servicos.php" class="list-group-item list-group-item-action">Gerenciar Serviços</a>
-            <a href="gerenciar_clientes.php" class="list-group-item list-group-item-action">Visualizar Clientes</a>
-            <a href="relatorio_vendas.php" class="list-group-item list-group-item-action">Relatório de Vendas</a>
+            <a href="gerenciarServicos.php" class="list-group-item list-group-item-action">Gerenciar Serviços</a>
+            <a href="gerenciarClientes.php" class="list-group-item list-group-item-action">Visualizar Clientes</a>
+            <a href="relatorioVendas.php" class="list-group-item list-group-item-action">Relatório de Vendas</a>
         </div>
     </div>
 </div>

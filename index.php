@@ -39,7 +39,7 @@
         <div class="h-100 p-5 bg-light border rounded-3">
             <h2>Fale Conosco</h2>
             <p>Tem alguma dúvida ou precisa de um orçamento personalizado? Nossa equipe está pronta para te atender. Entre em contato conosco.</p>
-            <a href="public/fale_conosco.php" class="btn btn-outline-secondary" type="button">Entrar em Contato</a>
+            <a href="public/faleConosco.php" class="btn btn-outline-secondary" type="button">Entrar em Contato</a>
         </div>
     </div>
 </div>

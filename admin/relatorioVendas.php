@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <div class="row container-xl mx-auto">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_admin.php'; ?>
+    <?php require_once '../includes/menuAdmin.php'; ?>
     </div>
     <div class="col-md-9">
         <h2>Relatório de Vendas</h2>

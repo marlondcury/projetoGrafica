@@ -92,7 +92,7 @@ switch ($opcao) {
 
         $usuario = $usuarioDao->buscarPorId($id);
         if (!$usuario) {
-            header('Location: ../admin/gerenciar_clientes.php?status=erro&acao=usuario_nao_encontrado');
+            header('Location: ../admin/gerenciarClientes.php?status=erro&acao=usuario_nao_encontrado');
             exit();
         }
 
@@ -104,9 +104,9 @@ switch ($opcao) {
         $sucessoCliente = $usuarioDao->atualizarCliente($id, $telefone, $endereco, $cep, $cidade, $uf);
 
         if ($sucessoUsuario && $sucessoCliente) {
-            header('Location: ../admin/gerenciar_clientes.php?status=sucesso&acao=alterado');
+            header('Location: ../admin/gerenciarClientes.php?status=sucesso&acao=alterado');
         } else {
-            header('Location: ../admin/gerenciar_clientes.php?status=erro&acao=alteracao');
+            header('Location: ../admin/gerenciarClientes.php?status=erro&acao=alteracao');
         }
         break;
         
@@ -119,15 +119,15 @@ switch ($opcao) {
         $id = $_GET['id'] ?? null;
 
         if ($usuarioDao->excluir($id)) {
-            header('Location: ../admin/gerenciar_clientes.php?status=sucesso&acao=excluido');
+            header('Location: ../admin/gerenciarClientes.php?status=sucesso&acao=excluido');
         } else {
-            header('Location: ../admin/gerenciar_clientes.php?status=erro&acao=exclusao');
+            header('Location: ../admin/gerenciarClientes.php?status=erro&acao=exclusao');
         }
         break;
 
     case 'listar':
     default:
-        header('Location: ../admin/gerenciar_clientes.php');
+    header('Location: ../admin/gerenciarClientes.php');
         break;
         case 'atualizar_meus_dados':
     

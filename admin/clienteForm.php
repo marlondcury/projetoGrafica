@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
 
 <div class="container mt-5">
     <h1><?= $titulo_pagina; ?></h1>
-    <p><a href="gerenciar_clientes.php">Voltar para a lista de clientes</a></p>
+    <p><a href="gerenciarClientes.php">Voltar para a lista de clientes</a></p>
     
     <?php if ($usuario): ?>
         <form action="../controllers/usuarioController.php" method="POST">

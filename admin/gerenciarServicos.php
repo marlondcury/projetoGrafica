@@ -5,6 +5,7 @@ require_once '../dao/ServicoDao.php';
 require_once '../classes/Servico.php';
 
 $servicoDao = new ServicoDao();
+
 $filtros = [];
 if (!empty($_GET['q'])) $filtros['nome'] = trim($_GET['q']);
 if (!empty($_GET['tipo'])) $filtros['tipo'] = trim($_GET['tipo']);
@@ -16,7 +17,7 @@ $tiposDisponiveis = $servicoDao->listarTipos();
 
 <div class="row container-xl mx-auto">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_admin.php'; ?>
+    <?php require_once '../includes/menuAdmin.php'; ?>
     </div>
 
     <div class="col-md-9">
@@ -71,8 +72,8 @@ $tiposDisponiveis = $servicoDao->listarTipos();
                 <tr>
                     <td><?= htmlspecialchars($servico['id']); ?></td>
                     <td><?= htmlspecialchars($servico['nome']); ?></td>
-                    <td><?= ucfirst(htmlspecialchars($servico['tipo_servico'])); ?></td>
-                    <td>R$ <?= number_format($servico['preco_base'], 2, ',', '.') ?></td>
+                    <td><?= ucfirst(htmlspecialchars($servico['tipoServico'])); ?></td>
+                    <td>R$ <?= number_format($servico['precoBase'], 2, ',', '.') ?></td>
                     <td>
                         <a href="servicoForm.php?id=<?= htmlspecialchars($servico['id']); ?>" class="btn btn-warning btn-sm">Alterar</a>
                         <a href="../controllers/controlerServico.php?opcao=excluir&id=<?= htmlspecialchars($servico['id']); ?>" 

@@ -6,27 +6,28 @@ require_once '../classes/Servico.php';
 
 $servicoDao = new ServicoDao();
 $servico = null;
-$titulo_pagina = 'Adicionar Novo Serviço';
-$acao_form = 'cadastrar';
+
+$tituloPagina = 'Adicionar Novo Serviço';
+$acaoForm = 'cadastrar';
 
 
 if (isset($_GET['id'])) {
     $servico = $servicoDao->buscarPorId($_GET['id']);
     if ($servico) {
-        $titulo_pagina = 'Alterar Serviço';
-        $acao_form = 'alterar';
+        $tituloPagina = 'Alterar Serviço';
+        $acaoForm = 'alterar';
     }
 }
 ?>
 
 
 <div class="container container-xl mx-auto mt-5">
-    <h1><?= $titulo_pagina; ?></h1>
-    <a href="gerenciar_servicos.php" class="btn btn-secondary mb-3">
+    <h1><?= $tituloPagina; ?></h1>
+    <a href="gerenciarServicos.php" class="btn btn-secondary mb-3">
         &larr; Voltar para a lista de serviços
     </a>    
     <form action="../controllers/controlerServico.php" method="POST">
-        <input type="hidden" name="opcao" value="<?= $acao_form; ?>">
+    <input type="hidden" name="opcao" value="<?= $acaoForm; ?>">
         
         <?php if ($servico): ?>
             <input type="hidden" name="id" value="<?= htmlspecialchars($servico['id']); ?>">
@@ -43,18 +44,18 @@ if (isset($_GET['id'])) {
         </div>
         
         <div class="mb-3">
-            <label for="preco_base" class="form-label">Preço Base</label>
-            <input type="number" step="0.01" class="form-control" id="preco_base" name="preco_base" value="<?= $servico ? htmlspecialchars($servico['preco_base']) : ''; ?>" required>
+            <label for="precoBase" class="form-label">Preço Base</label>
+            <input type="number" step="0.01" class="form-control" id="precoBase" name="precoBase" value="<?= $servico ? htmlspecialchars($servico['preco_base']) : ''; ?>" required>
         </div>
         
         <div class="mb-3">
-            <label for="imagem_url" class="form-label">URL da Imagem</label>
-            <input type="text" class="form-control" id="imagem_url" name="imagem_url" value="<?= $servico ? htmlspecialchars($servico['imagem_url']) : ''; ?>">
+            <label for="imagemUrl" class="form-label">URL da Imagem</label>
+            <input type="text" class="form-control" id="imagemUrl" name="imagemUrl" value="<?= $servico ? htmlspecialchars($servico['imagem_url']) : ''; ?>">
         </div>
         
         <div class="mb-3">
-            <label for="tipo_servico" class="form-label">Tipo de Serviço</label>
-            <input type="text" class="form-control" id="tipo_servico" name="tipo_servico" value="<?= $servico ? htmlspecialchars($servico['tipo_servico']) : ''; ?>" required>
+            <label for="tipoServico" class="form-label">Tipo de Serviço</label>
+            <input type="text" class="form-control" id="tipoServico" name="tipoServico" value="<?= $servico ? htmlspecialchars($servico['tipo_servico']) : ''; ?>" required>
         </div>
         
         <button type="submit" class="btn btn-success">Salvar Serviço</button>

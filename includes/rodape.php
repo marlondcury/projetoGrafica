@@ -1,4 +1,4 @@
-</div> <footer class="bg-dark text-white text-center p-3 mt-5">
+</div> <footer class="bg-dark text-white py-3 mt-auto container-fluid text-center">
     <p>&copy; 2025 Gráfica Rápida. Todos os direitos reservados.</p>
 </footer>
 

@@ -10,7 +10,7 @@ $cliente_dados = $usuarioDao->buscarDetalhesDoUsuario($_SESSION['usuario_id']);
 
 <div class="row container-xl mx-auto mt-4">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_cliente.php'; ?>
+    <?php require_once '../includes/menuCliente.php'; ?>
     </div>
     <div class="col-md-9">
         <h2>Meus Dados Cadastrais</h2>
