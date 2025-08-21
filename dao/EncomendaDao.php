@@ -1,6 +1,6 @@
 <?php
 require_once 'Conexao.php';
-require_once '../classes/Encomenda.php';
+require_once __DIR__ . '/../classes/Encomenda.php';
 
 
 class EncomendaDao {

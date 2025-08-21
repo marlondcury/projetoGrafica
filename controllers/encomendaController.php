@@ -50,7 +50,7 @@ switch($opcao) {
     header('Location: ../cliente/carrinho.php?status=item_adicionado');
         break;
 
-    case 'remover_item': // remover item no carrinho
+    case 'remover_item': 
         $index = $_GET['index'] ?? -1;
         if (isset($_SESSION['carrinho'][$index])) {
             unset($_SESSION['carrinho'][$index]);
@@ -59,7 +59,7 @@ switch($opcao) {
     header('Location: ../cliente/carrinho.php');
         break;
         
-        case 'finalizar': // finalizar compra
+        case 'finalizar': 
             if (empty($_SESSION['carrinho'])) {
                 header('Location: ../cliente/carrinho.php');
                 exit();
@@ -68,7 +68,6 @@ switch($opcao) {
             $encomenda = new Encomenda();
             $encomenda->setClienteId($_SESSION['usuario_id']);
             $encomenda->setDataEncomenda(date('Y-m-d H:i:s'));
-            // --- CORREÇÃO APLICADA AQUI ---
             $encomenda->setStatus('em_aberto');
     
             $valor_total_calculado = 0;
@@ -93,20 +92,14 @@ switch($opcao) {
                     'valor_total' => $encomenda->getValorTotal()
                 ];
                 unset($_SESSION['carrinho']);
-                    header('Location: ../cliente/boleto.php?id=' . $novaEncomendaId);
+                    header('Location: ../cliente/escolherPagamento.php?id=' . $novaEncomendaId);
             } else {
-                // Se o DAO retornar false, redireciona com erro
                     header('Location: ../cliente/carrinho.php?status=erro_finalizar');
             }
             break;
         
             case 'atualizar_status':
                 case 'atualizar_status':
-                    // VERIFICAÇÃO DE SEGURANÇA: apenas admin pode alterar o status
-                    if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
-                        header('Location: ../login.php?erro=acesso_negado');
-                        exit();
-                    }
                 
                     $id = $_POST['id'] ?? null;
                     $novoStatus = $_POST['novo_status'] ?? null;
@@ -125,7 +118,6 @@ switch($opcao) {
                     }
                     break;
             default:
-                // Padrão redireciona para a página do cliente se a opção não for reconhecida
                 header('Location: ../cliente/carrinho.php');
                 break;
 }

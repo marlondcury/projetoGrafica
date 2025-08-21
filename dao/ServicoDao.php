@@ -1,6 +1,6 @@
 <?php
 require_once 'Conexao.php';
-require_once '../classes/Servico.php';
+require_once __DIR__ .'/../classes/Servico.php';
 
 class ServicoDao {
 

@@ -2,6 +2,26 @@
 
 <div class="row justify-content-center">
     <div class="col-md-5">
+
+        <?php
+        if (isset($_GET['status'])):
+            $status = $_GET['status'];
+            switch ($status) {
+                case 'erro_campos':
+                    echo '<div class="alert alert-danger mt-3">Por favor, preencha e-mail e senha.</div>';
+                    break;
+                case 'erro_login':
+                    echo '<div class="alert alert-danger mt-3">As credenciais estão erradas.</div>';
+                    break;
+                case 'sucesso_cadastro':
+                    echo '<div class="alert alert-success mt-3">Cadastro realizado com sucesso! Faça o login.</div>';
+                    break;
+                default:
+                    break;
+            }
+        endif;
+        ?>
+
         <div class="card">
             <div class="card-header bg-dark text-white">
                 <h3 class="text-center">Login no Sistema</h3>
@@ -21,18 +41,6 @@
                         <button type="submit" class="btn btn-dark">Entrar</button>
                     </div>
                 </form>
-                <?php
-                    if (isset($_GET['status'])) {
-                        $status = $_GET['status'];
-                            if ($status == 'erro_campos') {
-                                echo '<div class="alert alert-danger mt-3">Por favor, preencha e-mail e senha.</div>';
-                            } elseif ($status == 'erro_login') {
-                                echo '<div class="alert alert-danger mt-3">As credenciais estão erradas.</div>';
-                        } elseif ($status == 'sucesso_cadastro') {
-                            echo '<div class="alert alert-success mt-3">Cadastro realizado com sucesso! Faça o login.</div>';
-                        }
-                    }
-                ?>
             </div>
 
             <div class="card-footer text-center">

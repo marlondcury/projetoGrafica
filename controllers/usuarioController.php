@@ -1,10 +1,13 @@
 <?php
 session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-require_once '../dao/UsuarioDao.php';
-require_once '../classes/Usuario.php';
+require_once __DIR__.'/../dao/UsuarioDao.php';
+require_once __DIR__.'/../classes/Usuario.php';
 
-$opcao = $_REQUEST['opcao'] ?? 'listar';
+$opcao = $_REQUEST['opcao'];
 
 $usuarioDao = new UsuarioDao();
 
@@ -47,45 +50,43 @@ switch ($opcao) {
 
         $usuario = $usuarioDao->buscarPorEmail($email);
 
-    // logging temporário removido
-
         if ($usuario && password_verify($senha, $usuario->getSenha())) {
-            // Segurança: evita session fixation
-            session_regenerate_id(true);
-
             $_SESSION['usuario_id'] = $usuario->getId();
             $_SESSION['usuario_nome'] = $usuario->getNome();
+            $_SESSION['usuario_tipo'] = $usuario->getTipo();
 
-            $tipo = strtolower($usuario->getTipo());
-            if ($tipo === 'admin') {
+            if ($usuario->getTipo() == 'admin') {
                 header('Location: ../admin/index.php');
-                exit();
             } else {
                 header('Location: ../cliente/index.php');
-                exit();
             }
         } else {
-            // Retorna ao formulário de login com status de erro
             header('Location: ../login.php?status=erro_login');
-            exit();
         }
         break;
 
     case 'logout':
-    session_destroy();
-    header('Location: ../index.php');
-        exit();
+        session_destroy();
+        header('Location: ../index.php');
         break;
 
-    case 'alterar':
+    case 'atualizar':
+
 
         $id = $_POST['id'] ?? null;
         $nome = $_POST['nome'] ?? null;
         $email = $_POST['email'] ?? null;
         $tipo = $_POST['tipo'] ?? null;
+        
+        $cpf = $_POST['cpf'] ?? null;
+        $telefone = $_POST['telefone'] ?? null;
+        $endereco = $_POST['endereco'] ?? null;
+        $cep = $_POST['cep'] ?? null;
+        $cidade = $_POST['cidade'] ?? null;
+        $uf = $_POST['uf'] ?? null;
 
         if (!$id || empty($nome) || empty($email) || empty($tipo)) {
-            header('Location: ../admin/gerenciar_clientes.php?status=erro&acao=alteracao_dados');
+            header('Location: ../admin/clienteForm.php?id='.$id.'&status=erro&acao=alteracao_dados');
             exit();
         }
 
@@ -99,30 +100,21 @@ switch ($opcao) {
         $usuario->setEmail($email);
         $usuario->setTipo($tipo);
         
-        if ($usuarioDao->atualizar($usuario)) {
+        $sucessoUsuario = $usuarioDao->atualizarUsuario($usuario, $cpf);
+        $sucessoCliente = $usuarioDao->atualizarCliente($id, $telefone, $endereco, $cep, $cidade, $uf);
+
+        if ($sucessoUsuario && $sucessoCliente) {
             header('Location: ../admin/gerenciar_clientes.php?status=sucesso&acao=alterado');
         } else {
             header('Location: ../admin/gerenciar_clientes.php?status=erro&acao=alteracao');
         }
         break;
-
-        case 'atualizar_dados':
-    
-            $usuario_id = $_SESSION['usuario_id'];
-            $nome = $_POST['nome'] ?? '';
-            $telefone = $_POST['telefone'] ?? '';
-            $endereco = $_POST['endereco'] ?? '';
-    
-            $usuarioDao = new UsuarioDao();
-            if ($usuarioDao->atualizarCliente($usuario_id, $nome, $telefone, $endereco)) {
-                $_SESSION['usuario_nome'] = $nome;
-                header('Location: ../cliente/meus_dados.php?status=sucesso_update');
-            } else {
-                header('Location: ../cliente/meus_dados.php?status=erro_update');
-            }
-            break;
         
     case 'excluir':
+        if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
+            header('Location: ../login.php?erro=acesso_negado');
+            exit();
+        }
         
         $id = $_GET['id'] ?? null;
 
@@ -135,7 +127,43 @@ switch ($opcao) {
 
     case 'listar':
     default:
-    header('Location: ../admin/gerenciar_clientes.php');
+        header('Location: ../admin/gerenciar_clientes.php');
         break;
+        case 'atualizar_meus_dados':
+    
+            $id = $_SESSION['usuario_id']; 
+            $nome = $_POST['nome'] ?? null;
+            $email = $_POST['email'] ?? null;
+            $cpf = $_POST['cpf'] ?? null;
+            $telefone = $_POST['telefone'] ?? null;
+            $endereco = $_POST['endereco'] ?? null;
+            $cep = $_POST['cep'] ?? null;
+            $cidade = $_POST['cidade'] ?? null;
+            $uf = $_POST['uf'] ?? null;
+            
+            if (empty($nome) || empty($email)) {
+                header('Location: /grafica_web/cliente/meus_dados.php?status=erro&acao=dados_invalidos');
+                exit();
+            }
+    
+            $usuario = $usuarioDao->buscarPorId($id);
+            if (!$usuario) {
+                header('Location: /grafica_web/cliente/meus_dados.php?status=erro&acao=usuario_nao_encontrado');
+                exit();
+            }
+    
+            $usuario->setNome($nome);
+            $usuario->setEmail($email);
+            
+            $sucessoUsuario = $usuarioDao->atualizarUsuario($usuario, $cpf);
+            $sucessoCliente = $usuarioDao->atualizarCliente($id, $telefone, $endereco, $cep, $cidade, $uf);
+    
+            if ($sucessoUsuario && $sucessoCliente) {
+                $_SESSION['usuario_nome'] = $nome; 
+                header('Location: /grafica_web/cliente/meus_dados.php?status=sucesso&acao=alterado');
+            } else {
+                header('Location: /grafica_web/cliente/meus_dados.php?status=erro&acao=alteracao');
+            }
+            break;
 }
 ?>
