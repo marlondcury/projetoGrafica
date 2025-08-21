@@ -1,19 +1,14 @@
 <?php
-// Não precisamos mais do Cliente.php aqui, pois vamos usar apenas o ID
-// require_once 'Cliente.php'; 
 require_once 'ItemEncomenda.php';
 
 class Encomenda {
     private $id;
-    // MUDANÇA: Alterado de $cliente para $cliente_id para armazenar apenas o ID.
     private $cliente_id; 
     private $itens_encomenda = [];
     private $data_encomenda;
     private $valor_total;
     private $status;
     private $data_vencimento_boleto;
-    
-    // --- Getters e Setters ---
 
     public function getId() {
         return $this->id;
@@ -21,8 +16,7 @@ class Encomenda {
     public function setId($id) {
         $this->id = $id;
     }
-    
-    // MUDANÇA: Métodos alterados para get/set do ID do cliente.
+
     public function getClienteId() {
         return $this->cliente_id;
     }

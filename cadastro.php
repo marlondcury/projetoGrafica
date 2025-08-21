@@ -8,7 +8,6 @@
             </div>
             <div class="card-body">
                 <?php
-                    // Feedback para o usuário
                     if (isset($_GET['status'])) {
                         $status = $_GET['status'];
                         if ($status == 'erro_campos') {

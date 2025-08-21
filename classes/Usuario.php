@@ -4,9 +4,8 @@ class Usuario {
     private $nome;
     private $email;
     private $senha;
-    private $tipo; // 'cliente' ou 'admin'
+    private $tipo; 
 
-    // Getters e Setters para cada atributo...
     public function getId() { return $this->id; }
     public function setId($id) { $this->id = $id; }
 

@@ -1,8 +1,8 @@
 <?php
-require_once '../includes/cabecalho.php';
 
-require_once __DIR__.'/../dao/ServicoDao.php';
-require_once __DIR__.'/../classes/Servico.php';
+require_once '../includes/cabecalho.php';
+require_once '../dao/ServicoDao.php';
+require_once '../classes/Servico.php';
 
 $servicoDao = new ServicoDao();
 $servico = null;

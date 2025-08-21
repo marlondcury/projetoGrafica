@@ -1,21 +1,13 @@
 <?php
-//session_start();
 
 require_once '../includes/cabecalho.php';
-require_once __DIR__.'/../dao/UsuarioDao.php';
-require_once __DIR__.'/../classes/Usuario.php';
-
-// Verificação de segurança: apenas administradores podem acessar
-if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
-    header('Location: /grafica_web/login.php?erro=acesso_negado');
-    exit();
-}
+require_once '../dao/UsuarioDao.php';
+require_once '../classes/Usuario.php';
 
 $usuarioDao = new UsuarioDao();
 $usuario = null;
 $titulo_pagina = 'Visualizar Usuário';
 
-// Se um ID foi passado na URL, carrega os dados para edição
 if (isset($_GET['id'])) {
     $usuario = $usuarioDao->buscarPorId($_GET['id']);
     if ($usuario) {

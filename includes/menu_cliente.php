@@ -1,5 +1,4 @@
 <?php
-// Pega o nome do arquivo da página atual para saber qual link destacar
 $pagina_atual = basename($_SERVER['PHP_SELF']);
 ?>
 

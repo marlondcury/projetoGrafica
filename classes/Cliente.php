@@ -2,12 +2,10 @@
 require_once 'Usuario.php';
 
 class Cliente {
-    private $id; // ID da tabela 'clientes'
-    private $usuario; // Objeto da classe Usuario
+    private $id; 
+    private $usuario; 
     private $telefone;
     private $endereco;
-
-    // --- Getters e Setters ---
 
     public function getId() {
         return $this->id;

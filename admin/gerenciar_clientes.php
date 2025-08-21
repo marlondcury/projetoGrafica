@@ -1,18 +1,9 @@
 <?php
-// O cabeçalho já contém session_start()
+
 require_once '../includes/cabecalho.php'; 
+require_once '../dao/UsuarioDao.php';
+require_once '../classes/Usuario.php';
 
-// Lógica de segurança para verificar se o usuário é admin
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'admin') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
-
-// 1. Incluir as classes DAO e Modelo de Usuario
-require_once __DIR__.'/../dao/UsuarioDao.php';
-require_once __DIR__.'/../classes/Usuario.php';
-
-// 2. Instanciar o DAO e buscar os dados do banco
 $usuarioDao = new UsuarioDao();
 $clientes = $usuarioDao->listarTodos();
 

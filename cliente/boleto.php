@@ -1,13 +1,11 @@
 <?php require_once '../includes/cabecalho.php'; ?>
 <?php
-// Lógica de segurança
+
 if (!isset($_SESSION['usuario_id'])) { header('Location: /grafica_web/login.php'); exit(); }
 
-// Dados da encomenda viriam do banco de dados usando o ID da URL
 $encomenda_id = $_GET['id'] ?? 'N/A';
-// Simulação de dados
 $cliente_nome = $_SESSION['usuario_nome'];
-$valor_total = 165.50; // Este valor viria do banco
+$valor_total = 165.50; 
 $data_vencimento = date('d/m/Y', strtotime('+3 days'));
 $linha_digitavel = '00190.00009 01027.234563 00000.000114 1 98760000016550';
 ?>

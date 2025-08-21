@@ -9,7 +9,6 @@ class UsuarioDao {
         try {
             $pdo->beginTransaction();
 
-            // 1. Insere na tabela 'usuarios'
             $sqlUsuario = 'INSERT INTO usuarios (nome, email, senha, tipo) VALUES (?, ?, ?, ?)';
             $senhaHash = password_hash($usuario->getSenha(), PASSWORD_BCRYPT);
             
@@ -22,8 +21,6 @@ class UsuarioDao {
             
             $usuarioId = $pdo->lastInsertId();
 
-            // 2. Insere na tabela 'clientes' USANDO O MESMO ID
-            // AQUI ESTÁ A CORREÇÃO PRINCIPAL
             $sqlCliente = 'INSERT INTO clientes (id, usuario_id) VALUES (?, ?)';
             $stmtCliente = $pdo->prepare($sqlCliente);
             $stmtCliente->bindValue(1, $usuarioId);
@@ -39,9 +36,8 @@ class UsuarioDao {
             return false;
         }
     }
-    // ... o método buscarPorEmail() continua igual ...
+
     public function buscarPorEmail($email) {
-        // (código do método buscarPorEmail sem alterações)
         $sql = 'SELECT * FROM usuarios WHERE email = ?';
         $stmt = Conexao::getInstance()->prepare($sql);
         $stmt->bindValue(1, $email);
@@ -63,7 +59,6 @@ class UsuarioDao {
 
 
     public function buscarClientePorUsuarioId($usuario_id) {
-        // Este SQL junta as duas tabelas para pegar todos os dados de uma vez
         $sql = 'SELECT u.nome, u.email, c.telefone, c.endereco 
                 FROM usuarios u 
                 JOIN clientes c ON u.id = c.usuario_id 
@@ -83,15 +78,13 @@ class UsuarioDao {
         $pdo = Conexao::getInstance();
         try {
             $pdo->beginTransaction();
-    
-            // 1. Atualiza o nome na tabela 'usuarios'
+ 
             $sqlUsuario = "UPDATE usuarios SET nome = ? WHERE id = ?";
             $stmtUsuario = $pdo->prepare($sqlUsuario);
             $stmtUsuario->bindValue(1, $nome);
             $stmtUsuario->bindValue(2, $usuario_id);
             $stmtUsuario->execute();
     
-            // 2. Atualiza telefone e endereço na tabela 'clientes'
             $sqlCliente = "UPDATE clientes SET telefone = ?, endereco = ? WHERE usuario_id = ?";
             $stmtCliente = $pdo->prepare($sqlCliente);
             $stmtCliente->bindValue(1, $telefone);
@@ -138,7 +131,6 @@ class UsuarioDao {
             $usuario->setNome($dados['nome']);
             $usuario->setEmail($dados['email']);
             $usuario->setTipo($dados['tipo']);
-            // Nota: a senha não é buscada por segurança
             return $usuario;
         }
         return null;
@@ -158,57 +150,47 @@ class UsuarioDao {
         }
     }
     
-   public function excluir($id) {
-    $pdo = Conexao::getInstance();
-    try {
-        $pdo->beginTransaction();
+    public function excluir($id) {
+        $pdo = Conexao::getInstance();
+        try {
+            $pdo->beginTransaction();
 
-        // 1. Encontra o ID da tabela 'clientes' para o usuário
-        // Isso é necessário porque a tabela 'encomendas' se refere a 'clientes'
-        $sqlIdCliente = 'SELECT id FROM clientes WHERE usuario_id = ?';
-        $stmtIdCliente = $pdo->prepare($sqlIdCliente);
-        $stmtIdCliente->bindValue(1, $id);
-        $stmtIdCliente->execute();
-        $clienteId = $stmtIdCliente->fetchColumn();
+            $sqlIdCliente = 'SELECT id FROM clientes WHERE usuario_id = ?';
+            $stmtIdCliente = $pdo->prepare($sqlIdCliente);
+            $stmtIdCliente->bindValue(1, $id);
+            $stmtIdCliente->execute();
+            $clienteId = $stmtIdCliente->fetchColumn();
 
-        // Se o usuário for um cliente, ele terá um ID na tabela 'clientes'
-        if ($clienteId) {
-            // 2. Exclui primeiro os itens de encomenda.
-            // Isso evita que a tabela 'encomendas' seja bloqueada pela tabela 'itens_encomenda'.
-            $sqlItens = 'DELETE FROM itens_encomenda WHERE encomenda_id IN (SELECT id FROM encomendas WHERE cliente_id = ?)';
-            $stmtItens = $pdo->prepare($sqlItens);
-            $stmtItens->bindValue(1, $clienteId);
-            $stmtItens->execute();
+            if ($clienteId) {
+                $sqlItens = 'DELETE FROM itens_encomenda WHERE encomenda_id IN (SELECT id FROM encomendas WHERE cliente_id = ?)';
+                $stmtItens = $pdo->prepare($sqlItens);
+                $stmtItens->bindValue(1, $clienteId);
+                $stmtItens->execute();
 
-            // 3. Exclui as encomendas do cliente.
-            $sqlEncomendas = 'DELETE FROM encomendas WHERE cliente_id = ?';
-            $stmtEncomendas = $pdo->prepare($sqlEncomendas);
-            $stmtEncomendas->bindValue(1, $clienteId);
-            $stmtEncomendas->execute();
+                $sqlEncomendas = 'DELETE FROM encomendas WHERE cliente_id = ?';
+                $stmtEncomendas = $pdo->prepare($sqlEncomendas);
+                $stmtEncomendas->bindValue(1, $clienteId);
+                $stmtEncomendas->execute();
+            }
+
+            $sqlCliente = 'DELETE FROM clientes WHERE usuario_id = ?';
+            $stmtCliente = $pdo->prepare($sqlCliente);
+            $stmtCliente->bindValue(1, $id);
+            $stmtCliente->execute();
+
+            $sqlUsuario = 'DELETE FROM usuarios WHERE id = ?';
+            $stmtUsuario = $pdo->prepare($sqlUsuario);
+            $stmtUsuario->bindValue(1, $id);
+            $stmtUsuario->execute();
+
+            $pdo->commit();
+            return true;
+
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            return false;
         }
-
-        // 4. Exclui da tabela 'clientes'.
-        $sqlCliente = 'DELETE FROM clientes WHERE usuario_id = ?';
-        $stmtCliente = $pdo->prepare($sqlCliente);
-        $stmtCliente->bindValue(1, $id);
-        $stmtCliente->execute();
-
-        // 5. Exclui da tabela principal 'usuarios'.
-        $sqlUsuario = 'DELETE FROM usuarios WHERE id = ?';
-        $stmtUsuario = $pdo->prepare($sqlUsuario);
-        $stmtUsuario->bindValue(1, $id);
-        $stmtUsuario->execute();
-
-        $pdo->commit();
-        return true;
-
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        // Para depuração, você pode usar:
-        // die("Erro ao excluir usuário: " . $e->getMessage()); 
-        return false;
     }
-}
    
 
 }

@@ -6,9 +6,7 @@ class Servico {
     private $descricao;
     private $preco_base;
     private $imagem_url;
-    private $tipo_servico; // Ex: 'reproducao', 'banner', 'caneca'
-
-    // --- Getters e Setters ---
+    private $tipo_servico; 
 
     public function getId() {
         return $this->id;

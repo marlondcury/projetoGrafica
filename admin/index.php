@@ -1,17 +1,12 @@
 <?php
+
 require_once '../includes/cabecalho.php';
 
-// Lógica de segurança para garantir que o usuário é admin
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'admin') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
 ?>
 
 <div class="row">
     <div class="col-md-3">
         <?php 
-            // Inclui o menu lateral específico do administrador
             require_once '../includes/menu_admin.php'; 
         ?>
     </div>

@@ -1,13 +1,6 @@
 <?php 
 require_once '../includes/cabecalho.php'; 
 
-// Lógica de segurança para verificar se o usuário é cliente
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'cliente') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
-
-// Pega o carrinho da sessão. Se não existir, cria um array vazio.
 $carrinho = $_SESSION['carrinho'] ?? [];
 $total_carrinho = 0;
 ?>
@@ -16,7 +9,6 @@ $total_carrinho = 0;
     <h2>Meu Carrinho de Compras</h2>
     <hr>
     <?php 
-    // Verifica se o carrinho NÃO está vazio antes de tentar mostrar a tabela
     if (count($carrinho) > 0): 
     ?>
         <table class="table table-hover align-middle">
@@ -62,7 +54,7 @@ $total_carrinho = 0;
                 </div>
             </div>
         </div>
-    <?php else: // Se o carrinho estiver vazio, mostra esta mensagem ?>
+    <?php else:?>
         <div class="alert alert-info">
             <h4 class="alert-heading">Seu carrinho está vazio!</h4>
             <p>Adicione serviços para poder finalizar sua encomenda.</p>

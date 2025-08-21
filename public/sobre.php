@@ -23,7 +23,7 @@
 
     <div class="row text-center">
         <div class="col-md-4">
-            <!-- ... existing content ... -->
+            
         </div>
     </div>
 </div>

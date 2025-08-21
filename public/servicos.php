@@ -2,10 +2,8 @@
 require_once '../includes/cabecalho.php'; 
 require_once '../dao/ServicoDao.php';
 
-// Cria a instância do DAO
 $servicoDao = new ServicoDao();
 
-// Recebe parâmetros de busca (nome, tipo, id)
 $filtros = [];
 if (!empty($_GET['q'])) {
     $filtros['nome'] = trim($_GET['q']);

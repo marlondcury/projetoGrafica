@@ -1,37 +1,32 @@
 <?php 
 require_once '../includes/cabecalho.php'; 
-// Inclui o DAO para buscar o serviço específico
 require_once '../dao/ServicoDao.php';
 
-// Lógica de segurança para usuário logado
 if (!isset($_SESSION['usuario_id'])) {
     $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
     header("Location: /grafica_web/login.php");
     exit();
 }
 
-// Pega o ID da URL de forma segura
 $servico_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-$servico = null; // Inicia a variável como nula
+$servico = null; 
 
 if ($servico_id) {
-    // Busca o serviço específico no banco de dados
     $servicoDao = new ServicoDao();
     $servico = $servicoDao->buscarPorId($servico_id);
 }
 
-// Se o serviço não for encontrado, exibe uma mensagem de erro
 if (!$servico) {
     echo "<div class='alert alert-danger'>Serviço não encontrado ou inválido.</div>";
     require_once '../includes/rodape.php';
-    exit(); // Interrompe a execução
+    exit(); 
 }
 ?>
 
 <div class="container-xl mx-auto mt-5">
     <h1 class="mb-4">Personalizar Serviço: <?= htmlspecialchars($servico['nome']) ?></h1>
 
-    <form action="/grafica_web/controllers/encomendaController.php" method="POST">
+    <form action="../controllers/encomendaController.php" method="POST">
         <input type="hidden" name="servico_id" value="<?= $servico['id'] ?>">
         <input type="hidden" name="opcao" value="adicionar">
         

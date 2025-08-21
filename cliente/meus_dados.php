@@ -1,14 +1,7 @@
 <?php
 require_once '../includes/cabecalho.php';
-require_once '../dao/UsuarioDao.php'; // Inclui o DAO
+require_once '../dao/UsuarioDao.php';
 
-// Lógica de segurança
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'cliente') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
-
-// Busca os dados REAIS do cliente no banco de dados
 $usuarioDao = new UsuarioDao();
 $cliente_dados = $usuarioDao->buscarClientePorUsuarioId($_SESSION['usuario_id']);
 ?>

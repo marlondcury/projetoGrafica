@@ -10,9 +10,8 @@
 
 <div class="row align-items-md-stretch">
     
-    <?php // Inicia a verificação: O usuário está logado?
+    <?php 
     if (isset($_SESSION['usuario_id'])): 
-        // Define o link do painel com base no tipo de usuário
         $link_painel = ($_SESSION['usuario_tipo'] == 'admin') ? 'admin/' : 'cliente/';
     ?>
 
@@ -34,7 +33,7 @@
             </div>
         </div>
 
-    <?php endif; // Fim da verificação ?>
+    <?php endif; ?>
 
     <div class="col-md-6">
         <div class="h-100 p-5 bg-light border rounded-3">

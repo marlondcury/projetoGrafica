@@ -1,9 +1,9 @@
 <?php
 
 require_once '../includes/cabecalho.php';
-require_once __DIR__.'/../dao/EncomendaDao.php';
-require_once __DIR__.'/../dao/ServicoDao.php';
-require_once __DIR__.'/../dao/UsuarioDao.php';
+require_once '../dao/EncomendaDao.php';
+require_once '../dao/ServicoDao.php';
+require_once '../dao/UsuarioDao.php';
 
 $encomendaDao = new EncomendaDao();
 $servicoDao = new ServicoDao();
