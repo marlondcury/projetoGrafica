@@ -1,22 +1,12 @@
 <?php
 require_once '../includes/cabecalho.php';
-// Inclui o DAO para poder buscar os dados das encomendas
 require_once '../dao/EncomendaDao.php';
 
-// Lógica de segurança para verificar se o usuário é cliente
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'cliente') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
-
-// --- LÓGICA PARA BUSCAR OS DADOS DINÂMICOS ---
 $encomendaDao = new EncomendaDao();
 $encomendas = $encomendaDao->listarPorClienteId($_SESSION['usuario_id']);
 
-// Pega apenas as 3 últimas encomendas para o resumo
 $ultimas_encomendas = array_slice($encomendas, 0, 3);
 
-// Calcula os totais para os cards de resumo
 $total_encomendas = count($encomendas);
 $encomendas_abertas = count(array_filter($encomendas, function($e) {
     return $e['status'] == 'em_aberto';
@@ -26,7 +16,7 @@ $encomendas_abertas = count(array_filter($encomendas, function($e) {
 <div class="container-xl mx-auto mt-4">
     <div class="row">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_cliente.php'; ?>
+    <?php require_once '../includes/menuCliente.php'; ?>
     </div>
     <div class="col-md-9">
         <h2>Painel do Cliente</h2>
@@ -81,7 +71,7 @@ $encomendas_abertas = count(array_filter($encomendas, function($e) {
         <?php else: ?>
             <div class="alert alert-info">
                 Você ainda não realizou nenhuma encomenda. Que tal começar agora?
-                <a href="/grafica_web/servicos.php" class="alert-link">Ver nossos serviços</a>.
+                <a href="../public/servicos.php" class="alert-link">Ver nossos serviços</a>.
             </div>
         <?php endif; ?>
     </div>

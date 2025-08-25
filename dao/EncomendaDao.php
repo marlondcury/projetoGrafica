@@ -1,13 +1,10 @@
 <?php
 require_once 'Conexao.php';
-require_once __DIR__.'/../classes/Encomenda.php';
+require_once __DIR__ . '/../classes/Encomenda.php';
 
-// A classe é declarada apenas UMA VEZ
+
 class EncomendaDao {
 
-    /**
-     * MÉTODO 1: Para criar uma nova encomenda.
-     */
     public function criar(Encomenda $encomenda) {
         $pdo = Conexao::getInstance();
         
@@ -47,9 +44,6 @@ class EncomendaDao {
         }
     }
 
-    /**
-     * MÉTODO 2: Para listar as encomendas de um cliente.
-     */
     public function listarPorClienteId($cliente_id) {
         $sql = 'SELECT * FROM encomendas WHERE cliente_id = ? ORDER BY data_encomenda DESC';
         
@@ -79,7 +73,6 @@ class EncomendaDao {
     public function buscarDetalhesPorId($id) {
         $pdo = Conexao::getInstance();
         try {
-            // 1. Busca os detalhes da encomenda principal
             $sqlEncomenda = 'SELECT * FROM encomendas WHERE id = ?';
             $stmtEncomenda = $pdo->prepare($sqlEncomenda);
             $stmtEncomenda->bindValue(1, $id, PDO::PARAM_INT);
@@ -90,14 +83,12 @@ class EncomendaDao {
                 return null;
             }
 
-            // 2. Busca os itens da encomenda
             $sqlItens = 'SELECT * FROM itens_encomenda WHERE encomenda_id = ?';
             $stmtItens = $pdo->prepare($sqlItens);
             $stmtItens->bindValue(1, $id, PDO::PARAM_INT);
             $stmtItens->execute();
             $itens = $stmtItens->fetchAll(PDO::FETCH_ASSOC);
 
-            // Retorna um array com os dados da encomenda e seus itens
             return [
                 'encomenda' => $dadosEncomenda,
                 'itens' => $itens
@@ -116,7 +107,6 @@ class EncomendaDao {
             $stmt->bindValue(2, $id, PDO::PARAM_INT);
             return $stmt->execute();
         } catch (PDOException $e) {
-           // Adicione esta linha para ver a mensagem de erro exata
            die("Erro ao atualizar status: " . $e->getMessage()); 
            return false;
         }

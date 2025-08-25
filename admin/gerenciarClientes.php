@@ -1,26 +1,19 @@
 <?php
-// O cabeçalho já contém session_start()
+
 require_once '../includes/cabecalho.php'; 
 
-// Lógica de segurança para verificar se o usuário é admin
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'admin') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
-
-// 1. Incluir as classes DAO e Modelo de Usuario
 require_once __DIR__.'/../dao/UsuarioDao.php';
 require_once __DIR__.'/../classes/Usuario.php';
 
-// 2. Instanciar o DAO e buscar os dados do banco
 $usuarioDao = new UsuarioDao();
-$clientes = $usuarioDao->listarTodos();
+
+$listaUsuarios = $usuarioDao->listarTodosComDetalhes();
 
 ?>
 
-<div class="row container-xl mx-auto">
+<div class="row">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_admin.php'; ?>
+    <?php require_once '../includes/menuAdmin.php'; ?>
     </div>
     <div class="col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -44,20 +37,24 @@ $clientes = $usuarioDao->listarTodos();
                         <th>ID</th>
                         <th>Nome</th>
                         <th>Email</th>
-                        <th>Tipo</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>Endereço</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($clientes as $cliente): ?>
+                    <?php foreach ($listaUsuarios as $usuario): ?>
                     <tr>
-                        <td><?= $cliente->getId() ?></td>
-                        <td><?= $cliente->getNome() ?></td>
-                        <td><?= $cliente->getEmail() ?></td>
-                        <td><?= ucfirst($cliente->getTipo()) ?></td>
+                        <td><?= htmlspecialchars($usuario['id']) ?></td>
+                        <td><?= htmlspecialchars($usuario['nome']) ?></td>
+                        <td><?= htmlspecialchars($usuario['email']) ?></td>
+                        <td><?= htmlspecialchars($usuario['cpf'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($usuario['telefone'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($usuario['endereco'] ?? 'N/A') ?></td>
                         <td>
-                            <a href="clienteForm.php?id=<?= $cliente->getId() ?>" class="btn btn-warning btn-sm">Alterar</a>
-                            <a href="../controllers/usuarioController.php?opcao=excluir&id=<?= $cliente->getId() ?>" 
+                            <a href="clienteForm.php?id=<?= $usuario['id'] ?>" class="btn btn-warning btn-sm">Alterar</a>
+                            <a href="../controllers/usuarioController.php?opcao=excluir&id=<?= $usuario['id'] ?>" 
                                class="btn btn-danger btn-sm"
                                onclick="return confirm('Tem certeza que deseja excluir este usuário?');">Excluir</a>
                         </td>

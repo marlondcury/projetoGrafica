@@ -10,9 +10,8 @@
 
 <div class="row align-items-md-stretch">
     
-    <?php // Inicia a verificação: O usuário está logado?
+    <?php 
     if (isset($_SESSION['usuario_id'])): 
-        // Define o link do painel com base no tipo de usuário
         $link_painel = ($_SESSION['usuario_tipo'] == 'admin') ? 'admin/' : 'cliente/';
     ?>
 
@@ -34,13 +33,13 @@
             </div>
         </div>
 
-    <?php endif; // Fim da verificação ?>
+    <?php endif; ?>
 
     <div class="col-md-6">
         <div class="h-100 p-5 bg-light border rounded-3">
             <h2>Fale Conosco</h2>
             <p>Tem alguma dúvida ou precisa de um orçamento personalizado? Nossa equipe está pronta para te atender. Entre em contato conosco.</p>
-            <a href="public/fale_conosco.php" class="btn btn-outline-secondary" type="button">Entrar em Contato</a>
+            <a href="public/faleConosco.php" class="btn btn-outline-secondary" type="button">Entrar em Contato</a>
         </div>
     </div>
 </div>

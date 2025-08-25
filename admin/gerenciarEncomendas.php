@@ -1,7 +1,7 @@
 <?php
 
 require_once '../includes/cabecalho.php';
-require_once __DIR__.'/../dao/EncomendaDao.php';
+require_once '../dao/EncomendaDao.php';
 
 $encomendaDao = new EncomendaDao();
 $listaEncomendas = $encomendaDao->listarTodos();
@@ -10,7 +10,7 @@ $listaEncomendas = $encomendaDao->listarTodos();
 
 <div class="row container-xl mx-auto">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_admin.php'; ?>
+    <?php require_once '../includes/menuAdmin.php'; ?>
     </div>
     <div class="col-md-9">
         <h2 class="mb-4">Gerenciar Encomendas</h2>

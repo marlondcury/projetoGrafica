@@ -1,16 +1,11 @@
 <?php
-// We no longer need to require Servico.php because we are only using its ID.
-// require_once 'Servico.php';
 
 class ItemEncomenda {
     private $id;
-    // CHANGED: From a Servico object to just the ID
     private $servico_id; 
     private $quantidade;
     private $valor_unitario;
     private $atributos;
-
-    // --- Getters and Setters ---
 
     public function getId() {
         return $this->id;
@@ -19,7 +14,6 @@ class ItemEncomenda {
         $this->id = $id;
     }
 
-    // CHANGED: Methods now get/set the service ID
     public function getServicoId() {
         return $this->servico_id;
     }

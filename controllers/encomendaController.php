@@ -1,44 +1,27 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
 session_start();
 
-// Inclusão de todas as dependências necessárias
-require_once __DIR__.'/../dao/ServicoDao.php';
-require_once __DIR__.'/../dao/EncomendaDao.php';
-require_once __DIR__.'/../classes/Encomenda.php';
-require_once __DIR__.'/../classes/ItemEncomenda.php';
+require_once '../dao/ServicoDao.php';
+require_once '../dao/EncomendaDao.php';
+require_once '../classes/Encomenda.php';
+require_once '../classes/ItemEncomenda.php';
 
-// ... coloque este código logo após o último require_once
-
-//--- INÍCIO DO TESTE DE FOGO ---
-if (class_exists('ItemEncomenda')) {
-    // Se entrar aqui, a classe foi carregada com sucesso.
-    // O erro pode estar em outro lugar (muito improvável).
-} else {
-    // Se entrar aqui, o require_once falhou.
-    die("FALHA DEFINITIVA: A classe 'ItemEncomenda' NÃO foi carregada. Verifique o nome do arquivo 'ItemEncomenda.php' e o caminho no require_once. O caminho usado foi: " . __DIR__.'/../classes/ItemEncomenda.php');
-}
-//--- FIM DO TESTE DE FOGO ---
-
-// O resto do seu código continua aqui...
-// Garante que o usuário está logado para qualquer ação de encomenda
 if (!isset($_SESSION['usuario_id'])) {
-    header('Location: /grafica_web/login.php?erro=login_necessario');
+    header('Location: ../login.php?erro=login_necessario');
     exit();
 }
 
 $opcao = $_REQUEST['opcao'] ?? 'ver';
 
 switch($opcao) {
-    case 'adicionar': //adiciona um item no carrinho
+    case 'adicionar': 
         $servico_id = filter_input(INPUT_POST, 'servico_id', FILTER_VALIDATE_INT);
         $quantidade = filter_input(INPUT_POST, 'quantidade', FILTER_VALIDATE_INT);
         $atributos = $_POST['atributos'] ?? [];
 
         if (!$servico_id || !$quantidade || $quantidade <= 0) {
-            header('Location: /grafica_web/servicos.php?status=erro_dados');
+            header('Location: ../public/servicos.php?status=erro_dados');
             exit();
         }
         
@@ -46,7 +29,7 @@ switch($opcao) {
         $servico = $servicoDao->buscarPorId($servico_id);
 
         if (!$servico) {
-            header('Location: /grafica_web/servicos.php?status=servico_invalido');
+            header('Location: ../public/servicos.php?status=servico_invalido');
             exit();
         }
         
@@ -64,28 +47,27 @@ switch($opcao) {
 
         $_SESSION['carrinho'][] = $item;
         
-    header('Location: /grafica_web/cliente/carrinho.php?status=item_adicionado');
+    header('Location: ../cliente/carrinho.php?status=item_adicionado');
         break;
 
-    case 'remover_item': // remover item no carrinho
+    case 'remover_item': 
         $index = $_GET['index'] ?? -1;
         if (isset($_SESSION['carrinho'][$index])) {
             unset($_SESSION['carrinho'][$index]);
             $_SESSION['carrinho'] = array_values($_SESSION['carrinho']);
         }
-    header('Location: /grafica_web/cliente/carrinho.php');
+    header('Location: ../cliente/carrinho.php');
         break;
         
-        case 'finalizar': // finalizar compra
+        case 'finalizar': 
             if (empty($_SESSION['carrinho'])) {
-                header('Location: /grafica_web/cliente/carrinho.php');
+                header('Location: ../cliente/carrinho.php');
                 exit();
             }
             
             $encomenda = new Encomenda();
             $encomenda->setClienteId($_SESSION['usuario_id']);
             $encomenda->setDataEncomenda(date('Y-m-d H:i:s'));
-            // --- CORREÇÃO APLICADA AQUI ---
             $encomenda->setStatus('em_aberto');
     
             $valor_total_calculado = 0;
@@ -110,40 +92,33 @@ switch($opcao) {
                     'valor_total' => $encomenda->getValorTotal()
                 ];
                 unset($_SESSION['carrinho']);
-                    header('Location: /grafica_web/cliente/boleto.php?id=' . $novaEncomendaId);
+                    header('Location: ../cliente/escolherPagamento.php?id=' . $novaEncomendaId);
             } else {
-                // Se o DAO retornar false, redireciona com erro
-                    header('Location: /grafica_web/cliente/carrinho.php?status=erro_finalizar');
+                    header('Location: ../cliente/carrinho.php?status=erro_finalizar');
             }
             break;
         
             case 'atualizar_status':
                 case 'atualizar_status':
-                    // VERIFICAÇÃO DE SEGURANÇA: apenas admin pode alterar o status
-                    if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
-                        header('Location: /grafica_web/login.php?erro=acesso_negado');
-                        exit();
-                    }
                 
                     $id = $_POST['id'] ?? null;
                     $novoStatus = $_POST['novo_status'] ?? null;
                 
                     if (!$id || empty($novoStatus)) {
-                        header('Location: /grafica_web/admin/gerenciarEncomendas.php?id=' . $id . '&status=erro&acao=dados_invalidos');
+                        header('Location: ../admin/gerenciarEncomendas.php?id=' . $id . '&status=erro&acao=dados_invalidos');
                         exit();
                     }
                     
                     $encomendaDao = new EncomendaDao();
                     
                     if ($encomendaDao->atualizarStatus($id, $novoStatus)) {
-                        header('Location: /grafica_web/admin/gerenciarEncomendas.php?id=' . $id . '&status=sucesso&acao=status_atualizado');
+                        header('Location: ../admin/gerenciarEncomendas.php?id=' . $id . '&status=sucesso&acao=status_atualizado');
                     } else {
-                        header('Location: /grafica_web/admin/gerenciarEncomendas.php?id=' . $id . '&status=erro&acao=status_nao_atualizado');
+                        header('Location: ../admin/gerenciarEncomendas.php?id=' . $id . '&status=erro&acao=status_nao_atualizado');
                     }
                     break;
             default:
-                // Padrão redireciona para a página do cliente se a opção não for reconhecida
-                header('Location: /grafica_web/cliente/carrinho.php');
+                header('Location: ../cliente/carrinho.php');
                 break;
 }
 ?>

@@ -1,19 +1,11 @@
 <?php
-// O cabeçalho já contém session_start()
+
 require_once '../includes/cabecalho.php'; 
+require_once '../dao/ServicoDao.php';
+require_once '../classes/Servico.php';
 
-// Lógica de segurança para verificar se o usuário é admin
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'admin') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
-
-// Incluir as classes DAO e Modelo
-require_once __DIR__.'/../dao/ServicoDao.php';
-require_once __DIR__.'/../classes/Servico.php';
-
-// Instanciar o DAO e buscar os dados do banco com possíveis filtros
 $servicoDao = new ServicoDao();
+
 $filtros = [];
 if (!empty($_GET['q'])) $filtros['nome'] = trim($_GET['q']);
 if (!empty($_GET['tipo'])) $filtros['tipo'] = trim($_GET['tipo']);
@@ -25,7 +17,7 @@ $tiposDisponiveis = $servicoDao->listarTipos();
 
 <div class="row container-xl mx-auto">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_admin.php'; ?>
+    <?php require_once '../includes/menuAdmin.php'; ?>
     </div>
 
     <div class="col-md-9">
@@ -34,7 +26,7 @@ $tiposDisponiveis = $servicoDao->listarTipos();
             <a href="servicoForm.php" class="btn btn-primary">Adicionar Novo Serviço</a>
         </div>
 
-        <form class="row g-2 mb-3" method="GET" action="/grafica_web/admin/gerenciar_servicos.php">
+        <form class="row g-2 mb-3" method="GET" action="gerenciar_servicos.php">
             <div class="col-md-4">
                 <input type="text" name="q" value="<?= isset($_GET['q']) ? htmlspecialchars($_GET['q']) : '' ?>" class="form-control" placeholder="Buscar por nome">
             </div>
@@ -51,7 +43,7 @@ $tiposDisponiveis = $servicoDao->listarTipos();
             </div>
             <div class="col-md-3 d-flex">
                 <button type="submit" class="btn btn-secondary me-2">Filtrar</button>
-                <a href="/grafica_web/admin/gerenciar_servicos.php" class="btn btn-outline-secondary">Limpar</a>
+                <a href="gerenciar_servicos.php" class="btn btn-outline-secondary">Limpar</a>
             </div>
         </form>
 
@@ -80,8 +72,8 @@ $tiposDisponiveis = $servicoDao->listarTipos();
                 <tr>
                     <td><?= htmlspecialchars($servico['id']); ?></td>
                     <td><?= htmlspecialchars($servico['nome']); ?></td>
-                    <td><?= ucfirst(htmlspecialchars($servico['tipo_servico'])); ?></td>
-                    <td>R$ <?= number_format($servico['preco_base'], 2, ',', '.') ?></td>
+                    <td><?= ucfirst(htmlspecialchars($servico['tipoServico'])); ?></td>
+                    <td>R$ <?= number_format($servico['precoBase'], 2, ',', '.') ?></td>
                     <td>
                         <a href="servicoForm.php?id=<?= htmlspecialchars($servico['id']); ?>" class="btn btn-warning btn-sm">Alterar</a>
                         <a href="../controllers/controlerServico.php?opcao=excluir&id=<?= htmlspecialchars($servico['id']); ?>" 

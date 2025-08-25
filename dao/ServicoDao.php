@@ -1,11 +1,10 @@
 <?php
 require_once 'Conexao.php';
-require_once __DIR__.'/../classes/Servico.php';
+require_once __DIR__ .'/../classes/Servico.php';
 
 class ServicoDao {
 
     public function listarTodos() {
-        // Retorna arrays associativos para compatibilidade com as views
         $sql = 'SELECT id, nome, descricao, preco_base, imagem_url, tipo_servico FROM servicos ORDER BY nome ASC';
         $stmt = Conexao::getInstance()->prepare($sql);
         $stmt->execute();
@@ -73,7 +72,6 @@ class ServicoDao {
             $stmt->bindValue(5, $servico->getTipoServico());
             return $stmt->execute();
         } catch (PDOException $e) {
-            // Em caso de erro, você pode registrar o erro ou retornar false
             return false;
         }
     }
@@ -105,25 +103,24 @@ class ServicoDao {
         }
     }
 
-    // Adicione este novo método à sua classe ServicoDao
-public function buscarObjetoPorId($id) {
-    $sql = 'SELECT * FROM servicos WHERE id = ?';
-    $stmt = Conexao::getInstance()->prepare($sql);
-    $stmt->bindValue(1, $id);
-    $stmt->execute();
-    
-    $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($dados) {
-        $servico = new Servico();
-        $servico->setId($dados['id']);
-        $servico->setNome($dados['nome']);
-        $servico->setDescricao($dados['descricao']);
-        $servico->setPrecoBase($dados['preco_base']);
-        $servico->setImagemUrl($dados['imagem_url']);
-        $servico->setTipoServico($dados['tipo_servico']);
-        return $servico;
+    public function buscarObjetoPorId($id) {
+        $sql = 'SELECT * FROM servicos WHERE id = ?';
+        $stmt = Conexao::getInstance()->prepare($sql);
+        $stmt->bindValue(1, $id);
+        $stmt->execute();
+        
+        $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($dados) {
+            $servico = new Servico();
+            $servico->setId($dados['id']);
+            $servico->setNome($dados['nome']);
+            $servico->setDescricao($dados['descricao']);
+            $servico->setPrecoBase($dados['preco_base']);
+            $servico->setImagemUrl($dados['imagem_url']);
+            $servico->setTipoServico($dados['tipo_servico']);
+            return $servico;
+        }
+        return null;
     }
-    return null;
-}
 }
 ?>

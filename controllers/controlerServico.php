@@ -1,18 +1,8 @@
 <?php
 session_start();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-// Verificação de segurança: apenas administradores podem acessar
-if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
-    header('Location: /grafica_web/login.php?erro=acesso_negado');
-    exit();
-}
-
-// Inclusão das dependências
-require_once __DIR__.'/../dao/ServicoDao.php';
-require_once __DIR__.'/../classes/Servico.php';
+require_once '../dao/ServicoDao.php';
+require_once '../classes/Servico.php';
 
 $opcao = $_REQUEST['opcao'] ?? 'listar';
 
@@ -34,9 +24,9 @@ switch ($opcao) {
         $novoServico->setTipoServico($tipo_servico);
 
         if ($servicoDao->criar($novoServico)) {
-            header('Location: /grafica_web/admin/gerenciar_servicos.php?status=sucesso&acao=cadastrado');
+            header('Location: ../admin/gerenciar_servicos.php?status=sucesso&acao=cadastrado');
         } else {
-            header('Location: /grafica_web/admin/gerenciar_servicos.php?status=erro&acao=cadastro');
+            header('Location: ../admin/gerenciar_servicos.php?status=erro&acao=cadastro');
         }
         break;
 
@@ -57,9 +47,9 @@ switch ($opcao) {
         $servicoAlterar->setTipoServico($tipo_servico);
 
         if ($servicoDao->atualizar($servicoAlterar)) {
-            header('Location: /grafica_web/admin/gerenciar_servicos.php?status=sucesso&acao=alterado');
+            header('Location: ../admin/gerenciar_servicos.php?status=sucesso&acao=alterado');
         } else {
-            header('Location: /grafica_web/admin/gerenciar_servicos.php?status=erro&acao=alteracao');
+            header('Location: ../admin/gerenciar_servicos.php?status=erro&acao=alteracao');
         }
         break;
         
@@ -67,17 +57,15 @@ switch ($opcao) {
         $id = $_GET['id'] ?? null;
 
         if ($servicoDao->excluir($id)) {
-            header('Location: /grafica_web/admin/gerenciar_servicos.php?status=sucesso&acao=excluido');
+            header('Location: ../admin/gerenciar_servicos.php?status=sucesso&acao=excluido');
         } else {
-            header('Location: /grafica_web/admin/gerenciar_servicos.php?status=erro&acao=exclusao');
+            header('Location: ../admin/gerenciar_servicos.php?status=erro&acao=exclusao');
         }
         break;
     
     case 'listar':
     default:
-        // A lógica de listagem será na página 'servicos.php', que chama este controlador
-        // sem uma 'opcao' específica.
-    header('Location: /grafica_web/admin/gerenciar_servicos.php');
+    header('Location: ../admin/gerenciar_servicos.php');
         break;
 }
 ?>

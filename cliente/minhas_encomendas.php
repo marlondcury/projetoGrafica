@@ -1,24 +1,15 @@
 <?php
 require_once '../includes/cabecalho.php';
-// 1. Inclui o DAO para poder usar suas funções
 require_once '../dao/EncomendaDao.php'; 
 
-// Lógica de segurança para verificar se o usuário é cliente
-if (!isset($_SESSION['usuario_id']) || $_SESSION['usuario_tipo'] != 'cliente') {
-    header('Location: /grafica_web/login.php');
-    exit();
-}
-
-// 2. Cria uma instância do DAO
 $encomendaDao = new EncomendaDao();
 
-// 3. Busca as encomendas REAIS do banco de dados usando o ID do usuário da sessão
 $encomendas = $encomendaDao->listarPorClienteId($_SESSION['usuario_id']);
 ?>
 
 <div class="row container-xl mx-auto mt-4">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_cliente.php'; ?>
+    <?php require_once '../includes/menuCliente.php'; ?>
     </div>
     <div class="col-md-9">
         <h2>Minhas Encomendas</h2>

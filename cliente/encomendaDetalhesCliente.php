@@ -10,7 +10,6 @@ $encomendaDetalhes = null;
 $encomenda = null;
 $clienteIdDaSessao = $_SESSION['usuario_id'];
 
-// Pega o ID da encomenda da URL
 if (isset($_GET['id'])) {
     $id_encomenda = $_GET['id'];
     $encomendaDetalhes = $encomendaDao->buscarDetalhesPorId($id_encomenda);
@@ -19,7 +18,6 @@ if (isset($_GET['id'])) {
         $encomenda = $encomendaDetalhes['encomenda'];
         $itens = $encomendaDetalhes['itens'];
         
-        // Verificação de segurança CRÍTICA: o cliente só pode ver as próprias encomendas
         if ($encomenda['cliente_id'] != $clienteIdDaSessao) {
             header('Location: minhas_encomendas.php?erro=acesso_negado');
             exit();
@@ -30,7 +28,7 @@ if (isset($_GET['id'])) {
 
 <div class="row container-xl mx-auto mt-4">
     <div class="col-md-3">
-        <?php require_once '../includes/menu_cliente.php'; ?>
+    <?php require_once '../includes/menuCliente.php'; ?>
     </div>
     <div class="col-md-9">
         <h2>Detalhes da Encomenda #<?= htmlspecialchars($encomenda['id'] ?? 'N/A') ?></h2>
